@@ -11,6 +11,8 @@
 #include "UI/ABHUDWidget.h"
 #include "CharacterStat/ABCharacterStatComponent.h"
 #include "Interface/ABGameInterface.h"
+#include "Engine/World.h"
+#include "GameFramework/GameModeBase.h"
 
 AABCharacterPlayer::AABCharacterPlayer()
 {
@@ -68,6 +70,9 @@ void AABCharacterPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if(false == IsLocallyControlled())
+		return;
+
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
 	{
@@ -79,6 +84,9 @@ void AABCharacterPlayer::BeginPlay()
 
 void AABCharacterPlayer::SetDead()
 {
+	if(false == IsLocallyControlled())
+		return;
+	
 	Super::SetDead();
 
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
@@ -92,6 +100,14 @@ void AABCharacterPlayer::SetDead()
 			ABGameMode->OnPlayerDead();
 		}
 	}
+}
+
+void AABCharacterPlayer::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if(HasAuthority() == false)
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("Current HP : %f"), Stat->GetCurrentHp()));
 }
 
 void AABCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -123,6 +139,9 @@ void AABCharacterPlayer::ChangeCharacterControl()
 
 void AABCharacterPlayer::SetCharacterControl(ECharacterControlType NewCharacterControlType)
 {
+	if(false == IsLocallyControlled())
+		return;
+	
 	UABCharacterControlData* NewCharacterControl = CharacterControlManager[NewCharacterControlType];
 	check(NewCharacterControl);
 
@@ -200,6 +219,25 @@ void AABCharacterPlayer::QuaterMove(const FInputActionValue& Value)
 }
 
 void AABCharacterPlayer::Attack()
+{
+	ServerRPCAttack();
+}
+
+// 최근, 악성 데이터/입력 감지를 위한 관문 역할을 위해 RPC 에 인증(validation) 함수를 추가하는 기능이 생겼습니다.
+// RPC 에 대한 인증 함수가 악성 파라미터를 감지한 경우, 해당 RPC 를 호출한 클라이언트/서버 연결을 끊도록 시스템에 알린다는 개념입니다. 
+bool AABCharacterPlayer::ServerRPCAttack_Validate()
+{
+	// 인증
+	return true;
+}
+
+void AABCharacterPlayer::ServerRPCAttack_Implementation()
+{
+	// if 공격 가능한가?
+	MulticastRPCAttack();
+}
+
+void AABCharacterPlayer::MulticastRPCAttack_Implementation()
 {
 	ProcessComboCommand();
 }

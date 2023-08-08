@@ -22,6 +22,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetDead() override;
+	virtual void Tick(float DeltaSeconds) override;
 
 public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -67,7 +68,14 @@ protected:
 
 	ECharacterControlType CurrentCharacterControlType;
 
+protected:
 	void Attack();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerRPCAttack();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastRPCAttack();
 
 // UI Section
 protected:
