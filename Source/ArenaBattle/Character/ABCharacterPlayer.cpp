@@ -84,10 +84,10 @@ void AABCharacterPlayer::BeginPlay()
 
 void AABCharacterPlayer::SetDead()
 {
+	Super::SetDead();
+
 	if(false == IsLocallyControlled())
 		return;
-	
-	Super::SetDead();
 
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
@@ -106,8 +106,11 @@ void AABCharacterPlayer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if(HasAuthority() == false)
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("Current HP : %f"), Stat->GetCurrentHp()));
+	// GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("Current HP : %f"), Stat->GetCurrentHp()));
+	// if(GetNetMode() == ENetMode::NM_Client && IsLocallyControlled())
+	// {
+	// 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("current hp : %f"), Stat->GetCurrentHp()));
+	// }
 }
 
 void AABCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

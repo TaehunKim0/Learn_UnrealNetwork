@@ -58,3 +58,13 @@ void UABCharacterStatComponent::SetHp(float NewHp)
 	OnHpChanged.Broadcast(CurrentHp);
 }
 
+void UABCharacterStatComponent::OnRep_CurrentHp() const
+{
+	OnHpChanged.Broadcast(CurrentHp);
+	if (CurrentHp <= KINDA_SMALL_NUMBER)
+	{
+		OnHpZero.Broadcast();
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("사망!")));
+	}
+}
+

@@ -46,7 +46,10 @@ public:
 protected:
 	void SetHp(float NewHp);
 
-	UPROPERTY(Replicated, Transient, VisibleInstanceOnly, Category = Stat) 
+	UFUNCTION()
+	void OnRep_CurrentHp() const;
+
+	UPROPERTY(ReplicatedUsing=OnRep_CurrentHp, Transient, VisibleInstanceOnly, Category = Stat) 
 	float CurrentHp;
 
 	UPROPERTY(Transient, VisibleInstanceOnly, Category = Stat)
