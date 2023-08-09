@@ -103,6 +103,9 @@ protected:
 	UPROPERTY()
 	TArray<FTakeItemDelegateWrapper> TakeItemActions;
 
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastRPCTakeItem(class UABItemData* InItemData);
+	
 	virtual void TakeItem(class UABItemData* InItemData) override;
 	virtual void DrinkPotion(class UABItemData* InItemData);
 	virtual void EquipWeapon(class UABItemData* InItemData);

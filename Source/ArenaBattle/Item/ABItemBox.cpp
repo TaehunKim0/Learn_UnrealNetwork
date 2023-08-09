@@ -70,16 +70,18 @@ void AABItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor
 		return;
 	}
 
+	Effect->Activate(true);
+	Mesh->SetHiddenInGame(true);
+	SetActorEnableCollision(false);
+	Effect->OnSystemFinished.AddDynamic(this, &AABItemBox::OnEffectFinished);
+
+	if(!HasAuthority()) return;
+	
 	IABCharacterItemInterface* OverlappingPawn = Cast<IABCharacterItemInterface>(OtherActor);
 	if (OverlappingPawn)
 	{
 		OverlappingPawn->TakeItem(Item);
 	}
-
-	Effect->Activate(true);
-	Mesh->SetHiddenInGame(true);
-	SetActorEnableCollision(false);
-	Effect->OnSystemFinished.AddDynamic(this, &AABItemBox::OnEffectFinished);
 }
 
 void AABItemBox::OnEffectFinished(UParticleSystemComponent* ParticleSystem)

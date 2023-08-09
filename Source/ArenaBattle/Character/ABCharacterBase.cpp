@@ -277,12 +277,17 @@ void AABCharacterBase::SetupCharacterWidget(UABUserWidget* InUserWidget)
 	}
 }
 
-void AABCharacterBase::TakeItem(UABItemData* InItemData)
+void AABCharacterBase::MulticastRPCTakeItem_Implementation(UABItemData* InItemData)
 {
 	if (InItemData)
 	{
 		TakeItemActions[(uint8)InItemData->Type].ItemDelegate.ExecuteIfBound(InItemData);
 	}
+}
+
+void AABCharacterBase::TakeItem(UABItemData* InItemData)
+{
+	MulticastRPCTakeItem(InItemData);
 }
 
 void AABCharacterBase::DrinkPotion(UABItemData* InItemData)
