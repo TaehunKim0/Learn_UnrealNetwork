@@ -89,6 +89,11 @@ void AABCharacterPlayer::SetDead()
 	// if(false == IsLocallyControlled())
 	// 	return;
 
+	if (!HasAuthority())
+	{
+		return;
+	}
+
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
 	{
