@@ -86,8 +86,8 @@ void AABCharacterPlayer::SetDead()
 {
 	Super::SetDead();
 
-	if(false == IsLocallyControlled())
-		return;
+	// if(false == IsLocallyControlled())
+	// 	return;
 
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
