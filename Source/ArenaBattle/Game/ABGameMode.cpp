@@ -3,6 +3,8 @@
 
 #include "Game/ABGameMode.h"
 #include "ABGameMode.h"
+
+#include "Character/ABCharacterBase.h"
 #include "Player/ABPlayerController.h"
 
 AABGameMode::AABGameMode()
@@ -57,4 +59,45 @@ void AABGameMode::OnPlayerDead()
 bool AABGameMode::IsGameCleared()
 {
 	return bIsCleared;
+}
+
+void AABGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+}
+
+void AABGameMode::OnPostLogin(AController* NewPlayer)
+{
+	Super::OnPostLogin(NewPlayer);
+
+	UE_LOG(LogTemp, Warning, TEXT("PostLogin"));
+
+	AABCharacterBase* PlayerCharacter = Cast<AABCharacterBase>(NewPlayer->GetPawn());
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->SetCharacterAppearIndex(CurrentAppearIndex);
+		CurrentAppearIndex++;
+		CurrentPlayerNum++;
+	}
+	else
+	{
+		checkf(true, TEXT("PlayerCharacter is nullptr"));
+	}
+
+	if(CurrentPlayerNum >= MaxPlayerNum)
+	{
+		for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+		{
+			AABCharacterBase* ABCharacter = Cast<AABCharacterBase>(Iterator->Get()->GetPawn());
+			if (ABCharacter)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Set Character Appearance : %d"), ABCharacter->AppearIndex);
+				ABCharacter->MulticastRPCSetCharacterAppearance(ABCharacter->AppearIndex);
+			}
+			else
+			{
+				checkf(true, TEXT("ABCharacter is nullptr"));
+			}
+		}
+	}
 }

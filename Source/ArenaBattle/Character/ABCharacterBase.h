@@ -39,7 +39,8 @@ public:
 	AABCharacterBase();
 
 	virtual void PostInitializeComponents() override;
-
+	virtual void BeginPlay() override;
+	
 protected:
 	virtual void SetCharacterControlData(const class UABCharacterControlData* CharacterControlData);
 
@@ -103,6 +104,9 @@ protected:
 	UPROPERTY()
 	TArray<FTakeItemDelegateWrapper> TakeItemActions;
 
+	UPROPERTY()
+	TArray<USkeletalMesh*> CharacterAppearances;
+
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastRPCTakeItem(class UABItemData* InItemData);
 	
@@ -116,4 +120,15 @@ public:
 	int32 GetLevel();
 	void SetLevel(int32 InNewLevel);
 	void ApplyStat(const FABCharacterStat& BaseStat, const FABCharacterStat& ModifierStat);
+
+// Login Section
+public:
+	int32 AppearIndex = 0;
+
+	void SetCharacterAppearIndex(int32 InAppearIndex);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastRPCSetCharacterAppearance(int32 InAppearIndex);
+
+	void SetCharacterAppearance(int32 InAppearIndex);
 };

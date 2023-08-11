@@ -22,6 +22,9 @@ public:
 	virtual void OnPlayerDead() override;
 	virtual bool IsGameCleared() override;
 
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+	virtual void OnPostLogin(AController* NewPlayer) override;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)
 	int32 ClearScore;
 
@@ -30,5 +33,9 @@ public:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Game)
 	uint8 bIsCleared : 1;
-	
+
+	int32 CurrentAppearIndex = 0;
+
+	int32 MaxPlayerNum = 4;
+	int32 CurrentPlayerNum = 0;
 };
