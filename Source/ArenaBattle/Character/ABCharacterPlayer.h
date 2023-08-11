@@ -25,6 +25,9 @@ protected:
 	virtual void SetDead() override;
 	virtual void Tick(float DeltaSeconds) override;
 
+	UFUNCTION(Server, Reliable)
+	void AddSpawnPlayerNumbers();
+
 	UFUNCTION()
 	void OnDeadMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 

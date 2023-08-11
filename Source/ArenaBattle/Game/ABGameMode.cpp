@@ -2,9 +2,10 @@
 
 
 #include "Game/ABGameMode.h"
-#include "ABGameMode.h"
 
+#include "ABGameState.h"
 #include "Character/ABCharacterBase.h"
+#include "GameFramework/GameMode.h"
 #include "Player/ABPlayerController.h"
 
 AABGameMode::AABGameMode()
@@ -24,6 +25,9 @@ AABGameMode::AABGameMode()
 	ClearScore = 3;
 	CurrentScore = 0;
 	bIsCleared = false;
+
+	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void AABGameMode::OnPlayerScoreChanged(int32 NewPlayerScore)
@@ -64,12 +68,7 @@ bool AABGameMode::IsGameCleared()
 void AABGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
-}
-
-void AABGameMode::OnPostLogin(AController* NewPlayer)
-{
-	Super::OnPostLogin(NewPlayer);
-
+	
 	UE_LOG(LogTemp, Warning, TEXT("PostLogin"));
 
 	AABCharacterBase* PlayerCharacter = Cast<AABCharacterBase>(NewPlayer->GetPawn());
@@ -77,14 +76,22 @@ void AABGameMode::OnPostLogin(AController* NewPlayer)
 	{
 		PlayerCharacter->SetCharacterAppearIndex(CurrentAppearIndex);
 		CurrentAppearIndex++;
-		CurrentPlayerNum++;
 	}
 	else
 	{
 		checkf(true, TEXT("PlayerCharacter is nullptr"));
 	}
+}
 
-	if(CurrentPlayerNum >= MaxPlayerNum)
+void AABGameMode::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	
+	if (bReady) return;
+
+	UE_LOG(LogTemp, Warning, TEXT("%i"), GetGameState<AABGameState>()->CurrentSpawnPlayers);
+	
+	if(GetGameState<AABGameState>()->CurrentSpawnPlayers >= MaxPlayerNum)
 	{
 		for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 		{
@@ -99,5 +106,8 @@ void AABGameMode::OnPostLogin(AController* NewPlayer)
 				checkf(true, TEXT("ABCharacter is nullptr"));
 			}
 		}
+		
+		bReady = true;
 	}
+
 }
