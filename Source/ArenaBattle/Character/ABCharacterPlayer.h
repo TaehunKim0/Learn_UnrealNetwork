@@ -20,9 +20,15 @@ public:
 	AABCharacterPlayer();
 
 protected:
+	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
 	virtual void SetDead() override;
 	virtual void Tick(float DeltaSeconds) override;
+
+	UFUNCTION()
+	void OnDeadMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
+	void SetRespawn();
 
 public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -68,6 +74,9 @@ protected:
 
 	ECharacterControlType CurrentCharacterControlType;
 
+	UPROPERTY()
+	class UABAnimInstance* MyAnim;
+
 protected:
 	void Attack();
 
@@ -81,3 +90,4 @@ protected:
 protected:
 	virtual void SetupHUDWidget(class UABHUDWidget* InHUDWidget) override;
 };
+

@@ -8,10 +8,13 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "ABCharacterControlData.h"
+#include "Animation/ABAnimInstance.h"
 #include "UI/ABHUDWidget.h"
 #include "CharacterStat/ABCharacterStatComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Interface/ABGameInterface.h"
 #include "Engine/World.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameModeBase.h"
 
 AABCharacterPlayer::AABCharacterPlayer()
@@ -66,6 +69,15 @@ AABCharacterPlayer::AABCharacterPlayer()
 	CurrentCharacterControlType = ECharacterControlType::Quater;
 }
 
+void AABCharacterPlayer::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	MyAnim = Cast<UABAnimInstance>(GetMesh()->GetAnimInstance());
+	if (!ensure(MyAnim != nullptr)) return;
+	MyAnim->OnMontageEnded.AddDynamic(this, &AABCharacterPlayer::OnDeadMontageEnded);
+}
+
 void AABCharacterPlayer::BeginPlay()
 {
 	Super::BeginPlay();
@@ -89,22 +101,31 @@ void AABCharacterPlayer::SetDead()
 	// if(false == IsLocallyControlled())
 	// 	return;
 
-	if (!HasAuthority())
-	{
-		return;
-	}
+	// if (!HasAuthority())
+	// {
+	// 	return;
+	// }
+	//
+	// APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	// if (PlayerController)
+	// {
+	// 	DisableInput(PlayerController);
+	//
+	// 	IABGameInterface* ABGameMode = Cast<IABGameInterface>(GetWorld()->GetAuthGameMode());
+	// 	if (ABGameMode)
+	// 	{
+	// 		ABGameMode->OnPlayerDead();
+	// 	}
+	// }
+}
 
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
-	if (PlayerController)
-	{
-		DisableInput(PlayerController);
-
-		IABGameInterface* ABGameMode = Cast<IABGameInterface>(GetWorld()->GetAuthGameMode());
-		if (ABGameMode)
-		{
-			ABGameMode->OnPlayerDead();
-		}
-	}
+void AABCharacterPlayer::SetRespawn()
+{
+	Stat->HealHp(Stat->GetTotalStat().MaxHp);
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	SetActorEnableCollision(true);
+	HpBar->SetHiddenInGame(false);
+	SetActorLocation(FVector(0,0,210));
 }
 
 void AABCharacterPlayer::Tick(float DeltaSeconds)
@@ -116,6 +137,14 @@ void AABCharacterPlayer::Tick(float DeltaSeconds)
 	// {
 	// 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("current hp : %f"), Stat->GetCurrentHp()));
 	// }
+}
+
+void AABCharacterPlayer::OnDeadMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	if (Montage == DeadMontage)
+	{
+		SetRespawn();
+	}
 }
 
 void AABCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
