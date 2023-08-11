@@ -9,6 +9,7 @@
 #include "Interface/ABCharacterItemInterface.h"
 #include "Engine/AssetManager.h"
 #include "ABItemData.h"
+#include "GameFramework/Character.h"
 
 // Sets default values
 AABItemBox::AABItemBox()
@@ -16,11 +17,11 @@ AABItemBox::AABItemBox()
 	Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerBox"));
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Effect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Effect"));
-
+	
 	RootComponent = Trigger;
 	Mesh->SetupAttachment(Trigger);
 	Effect->SetupAttachment(Trigger);
-
+	
 	Trigger->SetCollisionProfileName(CPROFILE_ABTRIGGER);
 	Trigger->SetBoxExtent(FVector(40.0f, 42.0f, 30.0f));
 
@@ -70,10 +71,14 @@ void AABItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor
 		return;
 	}
 
-	Effect->Activate(true);
 	Mesh->SetHiddenInGame(true);
 	SetActorEnableCollision(false);
-	Effect->OnSystemFinished.AddDynamic(this, &AABItemBox::OnEffectFinished);
+
+	if(Cast<ACharacter>(OtherActor)->IsLocallyControlled())
+	{
+		Effect->Activate(true);
+		Effect->OnSystemFinished.AddDynamic(this, &AABItemBox::OnEffectFinished);
+	}
 
 	if(!HasAuthority()) return;
 	
