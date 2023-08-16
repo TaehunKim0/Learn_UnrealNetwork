@@ -12,7 +12,6 @@ USTRUCT()
 struct FPlayerInfo
 {
 	GENERATED_BODY()
-	FName PlayerName;
 	int32 PlayerID;
 };
 

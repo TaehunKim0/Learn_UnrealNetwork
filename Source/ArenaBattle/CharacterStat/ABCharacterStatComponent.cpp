@@ -93,7 +93,8 @@ void UABCharacterStatComponent::OnRep_CurrentHp() const
 
 void UABCharacterStatComponent::SetCharacterAppearance()
 {
-	Cast<AABCharacterPlayer>(GetOwner())->GetMesh()->SetSkeletalMesh(CharacterSkeletalMeshes[AppearIndex]);
+	const auto PlayerCharacter = Cast<AABCharacterPlayer>(GetOwner());
+	PlayerCharacter->GetMesh()->SetSkeletalMesh(CharacterSkeletalMeshes[AppearIndex]);
 }
 
 void UABCharacterStatComponent::OnRep_AppearIndex()

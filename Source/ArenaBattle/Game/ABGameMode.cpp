@@ -74,17 +74,14 @@ void AABGameMode::PostLogin(APlayerController* NewPlayer)
 	AABCharacterBase* PlayerCharacter = Cast<AABCharacterBase>(NewPlayer->GetPawn());
 	if (PlayerCharacter)
 	{
-		FName PlayerName = *FString::Printf(TEXT("플레이어"));
-
-		PlayerInfos.Add({PlayerName ,PlayerCharacter->GetPlayerState()->GetPlayerId()});
+		PlayerInfos.Add({PlayerCharacter->GetPlayerState()->GetPlayerId()});
 
 		PlayerCharacter->Stat.Get()->AppearIndex = 	AppearanceCount;
+		PlayerCharacter->GetPlayerState()->SetPlayerName(FString::Printf(TEXT("플레이어 %i"), PlayerCharacter->GetPlayerState()->GetPlayerId()));
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *PlayerCharacter->GetPlayerState()->GetPlayerName());
 
 		AppearanceCount++;
 		if (AppearanceCount >= 4) AppearanceCount = 0;
-		
-		UE_LOG(LogTemp, Warning, TEXT("플레이어 아이디 %i"), PlayerCharacter->Stat.Get()->AppearIndex);
-
 		PlayerCharacter->Stat->SetCharacterAppearance();
 	}
 
