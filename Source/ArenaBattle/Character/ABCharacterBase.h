@@ -50,7 +50,6 @@ protected:
 
 // Combo Action Section
 protected:
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	TObjectPtr<class UAnimMontage> ComboActionMontage;
 
@@ -118,4 +117,13 @@ public:
 	int32 GetLevel();
 	void SetLevel(int32 InNewLevel);
 	void ApplyStat(const FABCharacterStat& BaseStat, const FABCharacterStat& ModifierStat);
+
+// Event Section
+public:
+	UFUNCTION(Server, Unreliable)
+	void ServerRPCActivateItemEffect(AABItemBox* ItemBox);
+
+private:
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastRPCActivateItemEffect(AABItemBox* ItemBox);
 };

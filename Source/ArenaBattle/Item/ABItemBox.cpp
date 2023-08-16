@@ -9,6 +9,7 @@
 #include "Interface/ABCharacterItemInterface.h"
 #include "Engine/AssetManager.h"
 #include "ABItemData.h"
+#include "Character/ABCharacterBase.h"
 #include "GameFramework/Character.h"
 
 // Sets default values
@@ -74,13 +75,13 @@ void AABItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor
 	Mesh->SetHiddenInGame(true);
 	SetActorEnableCollision(false);
 
-	if(Cast<ACharacter>(OtherActor)->IsLocallyControlled())
-	{
-		Effect->Activate(true);
-		Effect->OnSystemFinished.AddDynamic(this, &AABItemBox::OnEffectFinished);
-	}
-
 	if(!HasAuthority()) return;
+
+	if(OtherActor)
+	{
+		auto Character = Cast<AABCharacterBase>(OtherActor);
+		if(Character) Character->ServerRPCActivateItemEffect(this);
+	}
 	
 	IABCharacterItemInterface* OverlappingPawn = Cast<IABCharacterItemInterface>(OtherActor);
 	if (OverlappingPawn)
@@ -92,4 +93,10 @@ void AABItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor
 void AABItemBox::OnEffectFinished(UParticleSystemComponent* ParticleSystem)
 {
 	Destroy();
+}
+
+void AABItemBox::ActivateItemEffect()
+{
+	Effect->Activate(true);
+	Effect->OnSystemFinished.AddDynamic(this, &AABItemBox::OnEffectFinished);
 }

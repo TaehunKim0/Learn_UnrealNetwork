@@ -17,6 +17,8 @@ public:
 
 	FORCEINLINE class UBoxComponent* GetTrigger() { return Trigger; }
 
+	void ActivateItemEffect();
+
 protected:
 	virtual void PostInitializeComponents() override;
 

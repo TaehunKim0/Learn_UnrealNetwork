@@ -10,6 +10,7 @@
 #include "Physics/ABCollision.h"
 #include "Engine/DamageEvents.h"
 #include "CharacterStat/ABCharacterStatComponent.h"
+#include "Item/ABItemBox.h"
 #include "UI/ABWidgetComponent.h"
 #include "UI/ABHpBarWidget.h"
 #include "Item/ABItems.h"
@@ -342,4 +343,17 @@ void AABCharacterBase::ApplyStat(const FABCharacterStat& BaseStat, const FABChar
 {
 	float MovementSpeed = (BaseStat + ModifierStat).MovementSpeed;
 	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
+}
+
+void AABCharacterBase::ServerRPCActivateItemEffect_Implementation(AABItemBox* ItemBox)
+{
+	MulticastRPCActivateItemEffect(ItemBox);
+}
+
+void AABCharacterBase::MulticastRPCActivateItemEffect_Implementation(AABItemBox* ItemBox)
+{
+	if(ItemBox)
+	{
+		ItemBox->ActivateItemEffect();
+	}
 }
