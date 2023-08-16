@@ -8,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "ABCharacterControlData.h"
+#include "ArenaBattle.h"
 #include "Animation/ABAnimInstance.h"
 #include "UI/ABHUDWidget.h"
 #include "CharacterStat/ABCharacterStatComponent.h"
@@ -80,7 +81,11 @@ void AABCharacterPlayer::PostInitializeComponents()
 
 void AABCharacterPlayer::BeginPlay()
 {
+	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
+
 	Super::BeginPlay();
+
+	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
 	
 	if(false == IsLocallyControlled())
 		return;
@@ -138,6 +143,45 @@ void AABCharacterPlayer::Tick(float DeltaSeconds)
 	// 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("current hp : %f"), Stat->GetCurrentHp()));
 	// }
 }
+
+void AABCharacterPlayer::PostNetInit()
+{
+	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
+
+	Super::PostNetInit();
+
+	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
+}
+
+void AABCharacterPlayer::OnRep_PlayerState()
+{
+	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
+
+	Super::OnRep_PlayerState();
+
+	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
+}
+
+// void AABCharacterPlayer::PreReplication(IRepChangedPropertyTracker& ChangedPropertyTracker)
+// {
+// 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
+// 	
+// 	Super::PreReplication(ChangedPropertyTracker);
+// 	
+// 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
+// }
+//
+// bool AABCharacterPlayer::IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget,
+// 	const FVector& SrcLocation) const
+// {
+// 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
+// 	
+// 	bool IsRelevant = Super::IsNetRelevantFor(RealViewer, ViewTarget, SrcLocation);
+// 	
+// 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
+// 	
+// 	return IsRelevant;
+// }
 
 void AABCharacterPlayer::OnDeadMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {

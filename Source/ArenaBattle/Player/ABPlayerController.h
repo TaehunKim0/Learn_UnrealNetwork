@@ -31,8 +31,18 @@ public:
 	void GameScoreChanged(int32 NewScore);
 	void GameClear();
 	void GameOver();
-	
+
+public:
+	virtual void SetPlayer(UPlayer* InPlayer) override;
+	virtual void ReceivedPlayer() override;
+	virtual void PostNetInit() override;
+	virtual void OnActorChannelOpen(class FInBunch& InBunch, class UNetConnection* Connection) override;
+	virtual void SetPawn(APawn* InPawn) override;
+	virtual void OnRep_PlayerState() override;
+	//virtual bool IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const override;
+
 protected:
+	virtual void OnPossess(APawn* aPawn) override;
 	virtual void BeginPlay() override;
 	
 // HUD Section

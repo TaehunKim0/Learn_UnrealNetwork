@@ -4,6 +4,7 @@
 #include "Game/ABGameMode.h"
 #include "ABGameMode.h"
 
+#include "ArenaBattle.h"
 #include "Character/ABCharacterBase.h"
 #include "GameFramework/PlayerState.h"
 #include "Player/ABPlayerController.h"
@@ -64,7 +65,11 @@ bool AABGameMode::IsGameCleared()
 
 void AABGameMode::PostLogin(APlayerController* NewPlayer)
 {
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
 	Super::PostLogin(NewPlayer);
+
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"))
 
 	AABCharacterBase* PlayerCharacter = Cast<AABCharacterBase>(NewPlayer->GetPawn());
 	if (PlayerCharacter)
@@ -83,4 +88,44 @@ void AABGameMode::PostLogin(APlayerController* NewPlayer)
 		PlayerCharacter->Stat->SetCharacterAppearance();
 	}
 
+}
+
+void AABGameMode::GameWelcomePlayer(UNetConnection* Connection, FString& RedirectURL)
+{
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	Super::GameWelcomePlayer(Connection, RedirectURL);
+
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+}
+
+APlayerController* AABGameMode::Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal,
+	const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
+{
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	APlayerController* NewPlayerController = Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+
+	return NewPlayerController;
+}
+
+void AABGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId,
+	FString& ErrorMessage)
+{
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
+
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+}
+
+FString AABGameMode::InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId,
+	const FString& Options, const FString& Portal)
+{
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+	FString NewPlayerString = Super::InitNewPlayer(NewPlayerController, UniqueId, Options, Portal);
+
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+	return NewPlayerString;
 }

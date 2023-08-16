@@ -2,12 +2,12 @@
 
 
 #include "Prop/ABFountain.h"
+
+#include "ArenaBattle.h"
 #include "Components/StaticMeshComponent.h"
 
-// Sets default values
 AABFountain::AABFountain()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body"));
@@ -30,17 +30,45 @@ AABFountain::AABFountain()
 	}
 }
 
-// Called when the game starts or when spawned
 void AABFountain::BeginPlay()
 {
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
 	Super::BeginPlay();
 	
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
 }
 
-// Called every frame
 void AABFountain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
+void AABFountain::PostNetInit()
+{
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	Super::PostNetInit();
+
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+}
+
+//void AABFountain::PreReplication(IRepChangedPropertyTracker& ChangedPropertyTracker)
+//{
+//	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+//
+//	Super::PreReplication(ChangedPropertyTracker);
+//
+//	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+//}
+//
+//bool AABFountain::IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const
+//{
+//	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+//
+//	bool IsRelevant = Super::IsNetRelevantFor(RealViewer, ViewTarget, SrcLocation);
+//
+//	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+//
+//	return IsRelevant;
+//}

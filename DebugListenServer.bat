@@ -1,0 +1,1 @@
+UnrealEditor.exe ./ArenaBattle.uproject PVP?listen -game -windowed -ResX=1024 -ResY=768 -port=7777 -log

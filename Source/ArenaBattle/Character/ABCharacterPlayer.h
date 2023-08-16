@@ -22,15 +22,20 @@ public:
 protected:
 	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
-	virtual void SetDead() override;
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void PostNetInit() override;
+	virtual void OnRep_PlayerState() override;
+	// virtual void PreReplication(IRepChangedPropertyTracker& ChangedPropertyTracker) override;
+	// virtual bool IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const override;
+	
+	virtual void SetDead() override;
 
+public:
 	UFUNCTION()
 	void OnDeadMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
 	void SetRespawn();
 
-public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 // Character Control Section

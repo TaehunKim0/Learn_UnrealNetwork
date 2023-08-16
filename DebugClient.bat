@@ -1,0 +1,1 @@
+UnrealEditor.exe ./ArenaBattle..uproject 127.0.0.1:7777 -game -windowed -ResX=1024 -ResY=768 -log 

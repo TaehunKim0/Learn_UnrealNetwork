@@ -28,8 +28,17 @@ public:
 	virtual void OnPlayerScoreChanged(int32 NewPlayerScore) override;
 	virtual void OnPlayerDead() override;
 	virtual bool IsGameCleared() override;
-	virtual void PostLogin(APlayerController* NewPlayer) override;
 	
+protected:
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+
+	virtual void GameWelcomePlayer(UNetConnection* Connection, FString& RedirectURL) override;
+	virtual APlayerController* Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
+	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
+
+	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal = TEXT("")) override;
+
+public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)
 	int32 ClearScore;
 

@@ -1,0 +1,1 @@
+UnrealEditor.exe ./ArenaBattle.uproject PVP -server -port=7777 -log

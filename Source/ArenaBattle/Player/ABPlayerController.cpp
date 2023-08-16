@@ -5,6 +5,7 @@
 #include "UI/ABHUDWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "ABSaveGame.h"
+#include "ArenaBattle.h"
 
 DEFINE_LOG_CATEGORY(LogABPlayerController);
 
@@ -39,9 +40,101 @@ void AABPlayerController::GameOver()
 	K2_OnGameRetryCount(SaveGameInstance->RetryCount);
 }
 
+void AABPlayerController::SetPlayer(UPlayer* InPlayer)
+{
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	Super::SetPlayer(InPlayer);
+
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+}
+
+void AABPlayerController::ReceivedPlayer()
+{
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	Super::ReceivedPlayer();
+
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+}
+
+void AABPlayerController::PostNetInit()
+{
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	Super::PostNetInit();
+
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+}
+
+void AABPlayerController::OnActorChannelOpen(FInBunch& InBunch, UNetConnection* Connection)
+{
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	Super::OnActorChannelOpen(InBunch, Connection);
+
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+}
+
+void AABPlayerController::SetPawn(APawn* InPawn)
+{
+	if (InPawn)
+	{
+		AB_PCLOG(LogABNetwork, Log, TEXT("%s [%s]"), TEXT("Begin: InPawn's Name "), *InPawn->GetName());
+	}
+	else
+	{
+		AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin: InPawn is nullptr"));
+	}
+
+	Super::SetPawn(InPawn);
+
+	if (InPawn)
+	{
+		AB_PCLOG(LogABNetwork, Log, TEXT("%s [%s]"), TEXT("End: InPawn's Name "), *InPawn->GetName());
+	}
+	else
+	{
+		AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin: InPawn is nullptr"));
+	}
+}
+
+void AABPlayerController::OnRep_PlayerState()
+{
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	Super::OnRep_PlayerState();
+
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+}
+
+void AABPlayerController::OnPossess(APawn* aPawn)
+{
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	Super::OnPossess(aPawn);
+
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+}
+
+//bool AABPlayerController::IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const
+//{
+//	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+//
+//	bool IsRelevant = Super::IsNetRelevantFor(RealViewer, ViewTarget, SrcLocation);
+//
+//	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+//
+//	return IsRelevant;
+//}
+
 void AABPlayerController::BeginPlay()
 {
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
 	Super::BeginPlay();
+
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
 
 	FInputModeGameOnly GameOnlyInputMode;
 	SetInputMode(GameOnlyInputMode);

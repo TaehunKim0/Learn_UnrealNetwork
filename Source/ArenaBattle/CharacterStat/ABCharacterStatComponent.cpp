@@ -3,6 +3,7 @@
 
 #include "CharacterStat/ABCharacterStatComponent.h"
 
+#include "ArenaBattle.h"
 #include "Character/ABCharacterPlayer.h"
 #include "GameData/ABGameSingleton.h"
 #include "Net/UnrealNetwork.h"
@@ -41,6 +42,15 @@ void UABCharacterStatComponent::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(UABCharacterStatComponent, CurrentHp);
 	DOREPLIFETIME(UABCharacterStatComponent, AppearIndex);
+}
+
+void UABCharacterStatComponent::ReadyForReplication()
+{
+	AB_COMPLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	Super::ReadyForReplication();
+
+	AB_COMPLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
 }
 
 void UABCharacterStatComponent::SetLevelStat(int32 InNewLevel)

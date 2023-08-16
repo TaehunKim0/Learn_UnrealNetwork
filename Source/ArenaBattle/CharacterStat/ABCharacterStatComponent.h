@@ -23,6 +23,9 @@ public:
 protected:
 	virtual void InitializeComponent() override;
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;;
+
+public:
+	virtual void ReadyForReplication() override;
 	
 public:
 	FOnHpZeroDelegate OnHpZero;
