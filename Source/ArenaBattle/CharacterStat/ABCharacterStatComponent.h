@@ -43,11 +43,22 @@ public:
 	FORCEINLINE float GetAttackRadius() const { return AttackRadius; }
 	float ApplyDamage(float InDamage);
 
-protected:
 	void SetHp(float NewHp);
 
 	UFUNCTION()
 	void OnRep_CurrentHp() const;
+
+	void SetCharacterAppearance();
+	
+	UFUNCTION()
+	void OnRep_AppearIndex();
+	
+public:
+	UPROPERTY()
+	TArray<USkeletalMesh*> CharacterSkeletalMeshes;
+	
+	UPROPERTY(ReplicatedUsing=OnRep_AppearIndex, VisibleInstanceOnly, Category = Stat)
+	int32 AppearIndex = 0;
 
 	UPROPERTY(ReplicatedUsing=OnRep_CurrentHp, Transient, VisibleInstanceOnly, Category = Stat) 
 	float CurrentHp;

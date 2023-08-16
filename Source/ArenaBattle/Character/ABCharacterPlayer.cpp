@@ -81,7 +81,7 @@ void AABCharacterPlayer::PostInitializeComponents()
 void AABCharacterPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	if(false == IsLocallyControlled())
 		return;
 

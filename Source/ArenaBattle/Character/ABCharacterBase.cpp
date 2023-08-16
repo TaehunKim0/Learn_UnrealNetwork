@@ -45,19 +45,11 @@ AABCharacterBase::AABCharacterBase()
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef1(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Cardboard.SK_CharM_Cardboard'"));
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef2(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Barbarous.SK_CharM_Barbarous'"));
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef3(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_FrostGiant.SK_CharM_FrostGiant'"));
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef4(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Golden.SK_CharM_Golden'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Cardboard.SK_CharM_Cardboard'"));
 
-	CharacterSkeletalMeshes.Add(CharacterMeshRef1.Object);
-	CharacterSkeletalMeshes.Add(CharacterMeshRef2.Object);
-	CharacterSkeletalMeshes.Add(CharacterMeshRef3.Object);
-	CharacterSkeletalMeshes.Add(CharacterMeshRef4.Object);
-	
-	if (CharacterMeshRef1.Object)
+	if (CharacterMeshRef.Object)
 	{
-		GetMesh()->SetSkeletalMesh(CharacterMeshRef1.Object);
+		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
 	}
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/ArenaBattle/Animation/ABP_ABCharacter.ABP_ABCharacter_C"));

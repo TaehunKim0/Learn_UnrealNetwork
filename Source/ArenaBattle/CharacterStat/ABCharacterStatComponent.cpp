@@ -2,6 +2,8 @@
 
 
 #include "CharacterStat/ABCharacterStatComponent.h"
+
+#include "Character/ABCharacterPlayer.h"
 #include "GameData/ABGameSingleton.h"
 #include "Net/UnrealNetwork.h"
 
@@ -14,6 +16,16 @@ UABCharacterStatComponent::UABCharacterStatComponent()
 	bWantsInitializeComponent = true;
 
 	SetIsReplicated(true);
+
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef1(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Cardboard.SK_CharM_Cardboard'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef2(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Barbarous.SK_CharM_Barbarous'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef3(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_FrostGiant.SK_CharM_FrostGiant'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef4(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Golden.SK_CharM_Golden'"));
+
+	CharacterSkeletalMeshes.Add(CharacterMeshRef1.Object);
+	CharacterSkeletalMeshes.Add(CharacterMeshRef2.Object);
+	CharacterSkeletalMeshes.Add(CharacterMeshRef3.Object);
+	CharacterSkeletalMeshes.Add(CharacterMeshRef4.Object);
 }
 
 void UABCharacterStatComponent::InitializeComponent()
@@ -28,6 +40,7 @@ void UABCharacterStatComponent::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(UABCharacterStatComponent, CurrentHp);
+	DOREPLIFETIME(UABCharacterStatComponent, AppearIndex);
 }
 
 void UABCharacterStatComponent::SetLevelStat(int32 InNewLevel)
@@ -66,5 +79,15 @@ void UABCharacterStatComponent::OnRep_CurrentHp() const
 		OnHpZero.Broadcast();
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("사망!")));
 	}
+}
+
+void UABCharacterStatComponent::SetCharacterAppearance()
+{
+	Cast<AABCharacterPlayer>(GetOwner())->GetMesh()->SetSkeletalMesh(CharacterSkeletalMeshes[AppearIndex]);
+}
+
+void UABCharacterStatComponent::OnRep_AppearIndex()
+{
+	SetCharacterAppearance();
 }
 

@@ -7,9 +7,16 @@
 #include "Interface/ABGameInterface.h"
 #include "ABGameMode.generated.h"
 
-/**
- * 
- */
+
+USTRUCT()
+struct FPlayerInfo
+{
+	GENERATED_BODY()
+	FName PlayerName;
+	int32 PlayerID;
+};
+
+
 UCLASS()
 class ARENABATTLE_API AABGameMode : public AGameModeBase, public IABGameInterface
 {
@@ -21,6 +28,7 @@ public:
 	virtual void OnPlayerScoreChanged(int32 NewPlayerScore) override;
 	virtual void OnPlayerDead() override;
 	virtual bool IsGameCleared() override;
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)
 	int32 ClearScore;
@@ -31,5 +39,8 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Game)
 	uint8 bIsCleared : 1;
 
-	int32 CurrentAppearIndex = 0;
+	int32 AppearanceCount = 0;
+	
+	UPROPERTY()
+	TArray<FPlayerInfo> PlayerInfos; 
 };

@@ -5,6 +5,7 @@
 #include "ABGameMode.h"
 
 #include "Character/ABCharacterBase.h"
+#include "GameFramework/PlayerState.h"
 #include "Player/ABPlayerController.h"
 
 AABGameMode::AABGameMode()
@@ -59,4 +60,27 @@ void AABGameMode::OnPlayerDead()
 bool AABGameMode::IsGameCleared()
 {
 	return bIsCleared;
+}
+
+void AABGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	AABCharacterBase* PlayerCharacter = Cast<AABCharacterBase>(NewPlayer->GetPawn());
+	if (PlayerCharacter)
+	{
+		FName PlayerName = *FString::Printf(TEXT("플레이어"));
+
+		PlayerInfos.Add({PlayerName ,PlayerCharacter->GetPlayerState()->GetPlayerId()});
+
+		PlayerCharacter->Stat.Get()->AppearIndex = 	AppearanceCount;
+
+		AppearanceCount++;
+		if (AppearanceCount >= 4) AppearanceCount = 0;
+		
+		UE_LOG(LogTemp, Warning, TEXT("플레이어 아이디 %i"), PlayerCharacter->Stat.Get()->AppearIndex);
+
+		PlayerCharacter->Stat->SetCharacterAppearance();
+	}
+
 }

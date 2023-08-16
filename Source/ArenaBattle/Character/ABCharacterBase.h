@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CharacterStat/ABCharacterStatComponent.h"
 #include "GameFramework/Character.h"
 #include "Interface/ABAnimationAttackInterface.h"
 #include "Interface/ABCharacterWidgetInterface.h"
@@ -85,7 +86,7 @@ protected:
 	float DeadEventDelayTime = 5.0f;
 
 // Stat Section
-protected:
+public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UABCharacterStatComponent> Stat;
 
@@ -103,9 +104,6 @@ protected:
 
 	UPROPERTY()
 	TArray<FTakeItemDelegateWrapper> TakeItemActions;
-
-	UPROPERTY()
-	TArray<USkeletalMesh*> CharacterSkeletalMeshes;
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastRPCTakeItem(class UABItemData* InItemData);
