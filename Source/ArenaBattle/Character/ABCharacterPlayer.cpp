@@ -14,10 +14,8 @@
 #include "Components/WidgetComponent.h"
 #include "Interface/ABGameInterface.h"
 #include "Engine/World.h"
-#include "Game/ABGameState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameModeBase.h"
-#include "Kismet/GameplayStatics.h"
 
 AABCharacterPlayer::AABCharacterPlayer()
 {
@@ -83,13 +81,7 @@ void AABCharacterPlayer::PostInitializeComponents()
 void AABCharacterPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (IsLocallyControlled())
-	{
-		SetCharacterControl(CurrentCharacterControlType);
-		AddSpawnPlayerNumbers();
-	}
-	
+
 	if(false == IsLocallyControlled())
 		return;
 
@@ -98,6 +90,8 @@ void AABCharacterPlayer::BeginPlay()
 	{
 		EnableInput(PlayerController);
 	}
+
+	SetCharacterControl(CurrentCharacterControlType);
 }
 
 void AABCharacterPlayer::SetDead()
@@ -137,11 +131,12 @@ void AABCharacterPlayer::SetRespawn()
 void AABCharacterPlayer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-}
 
-void AABCharacterPlayer::AddSpawnPlayerNumbers_Implementation()
-{
-	Cast<AABGameState>(UGameplayStatics::GetGameState(GetWorld()))->CurrentSpawnPlayers++;
+	// GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("Current HP : %f"), Stat->GetCurrentHp()));
+	// if(GetNetMode() == ENetMode::NM_Client && IsLocallyControlled())
+	// {
+	// 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("current hp : %f"), Stat->GetCurrentHp()));
+	// }
 }
 
 void AABCharacterPlayer::OnDeadMontageEnded(UAnimMontage* Montage, bool bInterrupted)

@@ -23,7 +23,7 @@ public:
 	virtual bool IsGameCleared() override;
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
-	virtual void Tick(float DeltaSeconds) override;
+	virtual void OnPostLogin(AController* NewPlayer) override;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)
 	int32 ClearScore;
@@ -37,6 +37,5 @@ public:
 	int32 CurrentAppearIndex = 0;
 
 	int32 MaxPlayerNum = 4;
-
-	bool bReady = false;
+	int32 CurrentPlayerNum = 0;
 };
