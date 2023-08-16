@@ -50,10 +50,10 @@ AABCharacterBase::AABCharacterBase()
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef3(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_FrostGiant.SK_CharM_FrostGiant'"));
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef4(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Golden.SK_CharM_Golden'"));
 
-	CharacterAppearances.Add(CharacterMeshRef1.Object);
-	CharacterAppearances.Add(CharacterMeshRef2.Object);
-	CharacterAppearances.Add(CharacterMeshRef3.Object);
-	CharacterAppearances.Add(CharacterMeshRef4.Object);
+	CharacterSkeletalMeshes.Add(CharacterMeshRef1.Object);
+	CharacterSkeletalMeshes.Add(CharacterMeshRef2.Object);
+	CharacterSkeletalMeshes.Add(CharacterMeshRef3.Object);
+	CharacterSkeletalMeshes.Add(CharacterMeshRef4.Object);
 	
 	if (CharacterMeshRef1.Object)
 	{
@@ -350,25 +350,4 @@ void AABCharacterBase::ApplyStat(const FABCharacterStat& BaseStat, const FABChar
 {
 	float MovementSpeed = (BaseStat + ModifierStat).MovementSpeed;
 	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
-}
-
-void AABCharacterBase::SetCharacterAppearIndex(int32 InAppearIndex)
-{
-	if(InAppearIndex > CharacterAppearances.Num())
-	{
-		ensureMsgf(true, TEXT("Invalid Character Appearance Index"));
-		InAppearIndex = 0;
-	}
-
-	AppearIndex = InAppearIndex;
-}
-
-void AABCharacterBase::SetCharacterAppearance(int32 InAppearIndex)
-{
-	GetMesh()->SetSkeletalMesh(CharacterAppearances[InAppearIndex]);
-}
-
-void AABCharacterBase::MulticastRPCSetCharacterAppearance_Implementation(int32 InAppearIndex)
-{
-	SetCharacterAppearance(InAppearIndex);
 }
