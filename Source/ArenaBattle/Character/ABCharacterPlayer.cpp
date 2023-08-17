@@ -17,6 +17,7 @@
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameModeBase.h"
+#include "UI/ABWidgetComponent.h"
 
 AABCharacterPlayer::AABCharacterPlayer()
 {
@@ -29,6 +30,19 @@ AABCharacterPlayer::AABCharacterPlayer()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	// Widget Component 
+	NameTag = CreateDefaultSubobject<UABWidgetComponent>(TEXT("NameTag"));
+	NameTag->SetupAttachment(GetMesh());
+	NameTag->SetRelativeLocation(FVector(0.0f, 0.0f, 250.0f));
+	static ConstructorHelpers::FClassFinder<UUserWidget> HpBarWidgetRef(TEXT("/Game/ArenaBattle/UI/WBP_NameTag.WBP_NameTag_C"));
+	if (HpBarWidgetRef.Class)
+	{
+		NameTag->SetWidgetClass(HpBarWidgetRef.Class);
+		NameTag->SetWidgetSpace(EWidgetSpace::Screen);
+		NameTag->SetDrawSize(FVector2D(150.0f, 15.0f));
+		NameTag->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 
 	// Input
 	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionJumpRef(TEXT("/Script/EnhancedInput.InputAction'/Game/ArenaBattle/Input/Actions/IA_Jump.IA_Jump'"));
