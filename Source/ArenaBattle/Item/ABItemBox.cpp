@@ -40,6 +40,8 @@ AABItemBox::AABItemBox()
 		Effect->SetTemplate(EffectRef.Object);
 		Effect->bAutoActivate = false;
 	}
+
+	bAlwaysRelevant = true;
 }
 
 void AABItemBox::PostInitializeComponents()
@@ -99,4 +101,9 @@ void AABItemBox::ActivateItemEffect()
 {
 	Effect->Activate(true);
 	Effect->OnSystemFinished.AddDynamic(this, &AABItemBox::OnEffectFinished);
+}
+
+bool AABItemBox::IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const
+{
+	return Super::IsNetRelevantFor(RealViewer, ViewTarget, SrcLocation);
 }

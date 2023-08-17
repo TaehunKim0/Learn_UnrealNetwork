@@ -18,6 +18,7 @@ public:
 	FORCEINLINE class UBoxComponent* GetTrigger() { return Trigger; }
 
 	void ActivateItemEffect();
+	virtual bool IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const override;
 
 protected:
 	virtual void PostInitializeComponents() override;

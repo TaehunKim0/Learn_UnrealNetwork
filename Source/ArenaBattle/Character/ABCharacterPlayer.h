@@ -38,6 +38,8 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void SetNameTagWidget();
+	
 // Character Control Section
 protected:
 	void ChangeCharacterControl();
@@ -99,5 +101,7 @@ protected:
 // UI Section
 protected:
 	virtual void SetupHUDWidget(class UABHUDWidget* InHUDWidget) override;
+
+
 };
 

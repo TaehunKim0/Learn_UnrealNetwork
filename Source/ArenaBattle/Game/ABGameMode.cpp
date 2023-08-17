@@ -8,6 +8,7 @@
 #include "Character/ABCharacterBase.h"
 #include "GameFramework/PlayerState.h"
 #include "Player/ABPlayerController.h"
+#include "Player/ABPlayerState.h"
 
 AABGameMode::AABGameMode()
 {
@@ -22,6 +23,8 @@ AABGameMode::AABGameMode()
 	{
 		PlayerControllerClass = PlayerControllerClassRef.Class;
 	}
+
+	PlayerStateClass = AABPlayerState::StaticClass();
 
 	ClearScore = 3;
 	CurrentScore = 0;
@@ -77,14 +80,12 @@ void AABGameMode::PostLogin(APlayerController* NewPlayer)
 		PlayerInfos.Add({PlayerCharacter->GetPlayerState()->GetPlayerId()});
 
 		PlayerCharacter->Stat.Get()->AppearIndex = 	AppearanceCount;
-		PlayerCharacter->GetPlayerState()->SetPlayerName(FString::Printf(TEXT("플레이어 %i"), PlayerCharacter->GetPlayerState()->GetPlayerId()));
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *PlayerCharacter->GetPlayerState()->GetPlayerName());
+		//PlayerCharacter->GetPlayerState()->SetPlayerName(FString::Printf(TEXT("플레이어 %i"), PlayerCharacter->GetPlayerState()->GetPlayerId()));
 
 		AppearanceCount++;
 		if (AppearanceCount >= 4) AppearanceCount = 0;
 		PlayerCharacter->Stat->SetCharacterAppearance();
 	}
-
 }
 
 void AABGameMode::GameWelcomePlayer(UNetConnection* Connection, FString& RedirectURL)
@@ -123,6 +124,10 @@ FString AABGameMode::InitNewPlayer(APlayerController* NewPlayerController, const
 	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
 	FString NewPlayerString = Super::InitNewPlayer(NewPlayerController, UniqueId, Options, Portal);
 
+	auto state = NewPlayerController->GetPlayerState<APlayerState>();
+	AB_LOG(LogABNetwork, Log, TEXT("%d"), state->GetPlayerId());
+	
 	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+	
 	return NewPlayerString;
 }

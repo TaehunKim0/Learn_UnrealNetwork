@@ -10,13 +10,17 @@
 #include "ABCharacterControlData.h"
 #include "ArenaBattle.h"
 #include "Animation/ABAnimInstance.h"
+#include "Blueprint/WidgetTree.h"
 #include "UI/ABHUDWidget.h"
 #include "CharacterStat/ABCharacterStatComponent.h"
+#include "Components/TextBlock.h"
 #include "Components/WidgetComponent.h"
 #include "Interface/ABGameInterface.h"
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameModeBase.h"
+#include "GameFramework/PlayerState.h"
+#include "Player/ABPlayerState.h"
 #include "UI/ABWidgetComponent.h"
 
 AABCharacterPlayer::AABCharacterPlayer()
@@ -96,9 +100,7 @@ void AABCharacterPlayer::PostInitializeComponents()
 void AABCharacterPlayer::BeginPlay()
 {
 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
-
 	Super::BeginPlay();
-
 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
 	
 	if(false == IsLocallyControlled())
@@ -172,6 +174,8 @@ void AABCharacterPlayer::OnRep_PlayerState()
 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
 
 	Super::OnRep_PlayerState();
+
+	SetNameTagWidget();
 
 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
 }
@@ -346,5 +350,29 @@ void AABCharacterPlayer::SetupHUDWidget(UABHUDWidget* InHUDWidget)
 
 		Stat->OnStatChanged.AddUObject(InHUDWidget, &UABHUDWidget::UpdateStat);
 		Stat->OnHpChanged.AddUObject(InHUDWidget, &UABHUDWidget::UpdateHpBar);
+	}
+}
+
+void AABCharacterPlayer::SetNameTagWidget()
+{
+	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
+
+	if(GetPlayerState())
+	{
+		if(NameTag->GetWidget())
+		{
+			FString ID = FString::Printf(TEXT("%d"), GetPlayerState()->GetPlayerId());
+			FText PlayerName = FText::FromString(ID);
+
+			Cast<UTextBlock>(NameTag->GetWidget()->GetWidgetFromName(TEXT("PlayerName")))->SetText(PlayerName);
+		}
+		else
+		{
+			AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("NameTag->GetWidget() is nullptr"));
+		}
+	}
+	else
+	{
+		AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("PlayerState is nullptr"));
 	}
 }

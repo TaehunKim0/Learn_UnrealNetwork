@@ -6,6 +6,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "ABSaveGame.h"
 #include "ArenaBattle.h"
+#include "Character/ABCharacterPlayer.h"
+#include "GameFramework/PlayerState.h"
 
 DEFINE_LOG_CATEGORY(LogABPlayerController);
 
@@ -67,15 +69,6 @@ void AABPlayerController::PostNetInit()
 	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
 }
 
-void AABPlayerController::OnActorChannelOpen(FInBunch& InBunch, UNetConnection* Connection)
-{
-	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
-
-	Super::OnActorChannelOpen(InBunch, Connection);
-
-	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
-}
-
 void AABPlayerController::SetPawn(APawn* InPawn)
 {
 	if (InPawn)
@@ -108,11 +101,19 @@ void AABPlayerController::OnRep_PlayerState()
 	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
 }
 
+void AABPlayerController::PostNetReceive()
+{
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+	Super::PostNetReceive();
+	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+}
+
 void AABPlayerController::OnPossess(APawn* aPawn)
 {
 	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
 
 	Super::OnPossess(aPawn);
+	Cast<AABCharacterPlayer>(aPawn)->SetNameTagWidget();
 
 	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
 }

@@ -17,5 +17,6 @@
 #define AB_PCLOG(LogCat, Verbosity, Format, ...) UE_LOG(LogCat, Verbosity, TEXT("[%s][%s/%s][%s] %s %s"), LOG_NETMODEINFO, LOG_LOCALROLEINFO, LOG_REMOTEROLEINFO, LOG_PCLOCALPROXY, LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
 #define AB_PAWNLOG(LogCat, Verbosity, Format, ...) UE_LOG(LogCat, Verbosity, TEXT("[%s][%s/%s][%s] %s %s"), LOG_NETMODEINFO, LOG_LOCALROLEINFO, LOG_REMOTEROLEINFO, LOG_LOCALPROXY, LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
 #define AB_COMPLOG(LogCat, Verbosity, Format, ...) UE_LOG(LogCat, Verbosity, TEXT("[%s][%s/%s][%s] %s %s"), LOG_NETMODEINFO, LOG_COMPLOCALROLEINFO, LOG_COMPREMOTEROLEINFO, LOG_COMPLOCALPROXY, LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
+#define AB_STATELOG(LogCat, Verbosity, Format, ...) UE_LOG(LogCat, Verbosity, TEXT("[%s] %s %s"), LOG_NETMODEINFO, LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
 
 DECLARE_LOG_CATEGORY_EXTERN(LogABNetwork, Log, All);
