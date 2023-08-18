@@ -182,6 +182,8 @@ void AABCharacterPlayer::OnRep_PlayerState()
 		{
 			Cast<UABNameTagWidget>(NameTag->GetWidget())->UpdatePlayerNameTag();
 		}
+
+		Cast<AABPlayerState>(GetPlayerState())->SetCharacterAppearance();
 	}
 	
 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));

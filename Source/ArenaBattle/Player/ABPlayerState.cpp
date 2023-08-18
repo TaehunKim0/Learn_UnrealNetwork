@@ -67,8 +67,3 @@ void AABPlayerState::SetCharacterAppearance()
 		UE_LOG(LogTemp, Warning, TEXT("플레이어 캐릭터 못가져옴 (외형미적용)"));
 	}
 }
-
-void AABPlayerState::OnRep_AppearIndex()
-{
-	SetCharacterAppearance();
-}

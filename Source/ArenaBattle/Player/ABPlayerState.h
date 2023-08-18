@@ -28,11 +28,11 @@ public:
 
 	void SetCharacterAppearance();
 	
-	UFUNCTION()
-	void OnRep_AppearIndex();
+	// UFUNCTION()
+	// void OnRep_AppearIndex();
 
 public:
-	UPROPERTY(ReplicatedUsing=OnRep_AppearIndex, VisibleInstanceOnly, Category = Stat)
+	UPROPERTY(Replicated, VisibleInstanceOnly, Category = Stat)
 	int32 AppearIndex = 0;
 	
 private:
