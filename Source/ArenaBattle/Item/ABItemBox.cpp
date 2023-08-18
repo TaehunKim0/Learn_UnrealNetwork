@@ -10,7 +10,7 @@
 #include "Engine/AssetManager.h"
 #include "ABItemData.h"
 #include "Character/ABCharacterBase.h"
-#include "GameFramework/Character.h"
+#include "Character/ABCharacterNonPlayer.h"
 
 // Sets default values
 AABItemBox::AABItemBox()
@@ -79,10 +79,17 @@ void AABItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor
 
 	if(!HasAuthority()) return;
 
-	if(OtherActor)
+	AABCharacterBase* Character = Cast<AABCharacterBase>(OtherActor);
+	if(!OtherActor) return;
+	
+	if(Character->GetPlayerState())
 	{
-		auto Character = Cast<AABCharacterBase>(OtherActor);
-		if(Character) Character->ServerRPCActivateItemEffect(this);
+		Character->ServerRPCActivateItemEffect(this);
+	}
+	else
+	{
+		AABCharacterBase* LocalPlayer = Cast<AABCharacterBase>(GetWorld()->GetFirstPlayerController());
+		LocalPlayer->ServerRPCActivateItemEffect(this);
 	}
 	
 	IABCharacterItemInterface* OverlappingPawn = Cast<IABCharacterItemInterface>(OtherActor);
