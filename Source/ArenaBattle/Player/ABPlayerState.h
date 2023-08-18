@@ -18,6 +18,7 @@ public:
 	AABPlayerState();
 
 	virtual void BeginPlay() override;
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;;
 	
 public:
 	virtual void OnRep_PlayerId() override;
@@ -25,4 +26,16 @@ public:
 	virtual void PostNetInit() override;
 	virtual void PostNetReceive() override;
 
+	void SetCharacterAppearance();
+	
+	UFUNCTION()
+	void OnRep_AppearIndex();
+
+public:
+	UPROPERTY(ReplicatedUsing=OnRep_AppearIndex, VisibleInstanceOnly, Category = Stat)
+	int32 AppearIndex = 0;
+	
+private:
+	UPROPERTY()
+	TArray<USkeletalMesh*> CharacterSkeletalMeshes;
 };

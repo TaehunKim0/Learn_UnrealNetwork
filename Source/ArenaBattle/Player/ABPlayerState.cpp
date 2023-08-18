@@ -3,16 +3,35 @@
 
 #include "Player/ABPlayerState.h"
 #include "ArenaBattle.h"
+#include "Character/ABCharacterPlayer.h"
+#include "Net/UnrealNetwork.h"
 
 AABPlayerState::AABPlayerState()
 {
 	AB_STATELOG(LogABNetwork, Log, TEXT("%s"), TEXT("Create"));
+	
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef1(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Cardboard.SK_CharM_Cardboard'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef2(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Barbarous.SK_CharM_Barbarous'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef3(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_FrostGiant.SK_CharM_FrostGiant'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef4(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Golden.SK_CharM_Golden'"));
+
+	CharacterSkeletalMeshes.Add(CharacterMeshRef1.Object);
+	CharacterSkeletalMeshes.Add(CharacterMeshRef2.Object);
+	CharacterSkeletalMeshes.Add(CharacterMeshRef3.Object);
+	CharacterSkeletalMeshes.Add(CharacterMeshRef4.Object);
 }
 
 void AABPlayerState::BeginPlay()
 {
 	Super::BeginPlay();
 	AB_STATELOG(LogABNetwork, Log, TEXT("%s"), *GetPlayerName());
+}
+
+void AABPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
+	DOREPLIFETIME(AABPlayerState, AppearIndex);
 }
 
 void AABPlayerState::OnRep_PlayerId()
@@ -33,4 +52,23 @@ void AABPlayerState::PostNetInit()
 void AABPlayerState::PostNetReceive()
 {
 	Super::PostNetReceive();
+}
+
+void AABPlayerState::SetCharacterAppearance()
+{
+	const auto PlayerCharacter = Cast<AABCharacterPlayer>(GetPawn());
+	
+	if (PlayerCharacter->IsValidLowLevel())
+	{
+		PlayerCharacter->GetMesh()->SetSkeletalMesh(CharacterSkeletalMeshes[AppearIndex]);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("플레이어 캐릭터 못가져옴 (외형미적용)"));
+	}
+}
+
+void AABPlayerState::OnRep_AppearIndex()
+{
+	SetCharacterAppearance();
 }

@@ -79,12 +79,13 @@ void AABGameMode::PostLogin(APlayerController* NewPlayer)
 	{
 		PlayerInfos.Add({PlayerCharacter->GetPlayerState()->GetPlayerId()});
 
-		PlayerCharacter->Stat.Get()->AppearIndex = 	AppearanceCount;
-		//PlayerCharacter->GetPlayerState()->SetPlayerName(FString::Printf(TEXT("플레이어 %i"), PlayerCharacter->GetPlayerState()->GetPlayerId()));
+		AABPlayerState* PlayerState = Cast<AABPlayerState>(PlayerCharacter->GetPlayerState());
+		PlayerState->AppearIndex = AppearanceCount;
 
 		AppearanceCount++;
 		if (AppearanceCount >= 4) AppearanceCount = 0;
-		PlayerCharacter->Stat->SetCharacterAppearance();
+		
+		PlayerState->SetCharacterAppearance();
 	}
 }
 

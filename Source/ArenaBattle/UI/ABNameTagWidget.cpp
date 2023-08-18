@@ -25,8 +25,4 @@ void UABNameTagWidget::UpdatePlayerNameTag()
 		FText PlayerIDString = FText::FromString(ID);
 		PlayerName->SetText(PlayerIDString);
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("플레이어 스테이트 없음!"));
-	}
 }

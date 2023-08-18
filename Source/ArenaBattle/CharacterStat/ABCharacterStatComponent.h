@@ -46,20 +46,20 @@ public:
 	FORCEINLINE float GetAttackRadius() const { return AttackRadius; }
 	float ApplyDamage(float InDamage);
 	void SetHp(float NewHp);
-	void SetCharacterAppearance();
+	// void SetCharacterAppearance();
 
 	UFUNCTION()
 	void OnRep_CurrentHp() const;
 
-	UFUNCTION()
-	void OnRep_AppearIndex();
+	// UFUNCTION()
+	// void OnRep_AppearIndex();
 	
 public:
-	UPROPERTY()
-	TArray<USkeletalMesh*> CharacterSkeletalMeshes;
+	// UPROPERTY()
+	// TArray<USkeletalMesh*> CharacterSkeletalMeshes;
 	
-	UPROPERTY(ReplicatedUsing=OnRep_AppearIndex, VisibleInstanceOnly, Category = Stat)
-	int32 AppearIndex = 0;
+	// UPROPERTY(ReplicatedUsing=OnRep_AppearIndex, VisibleInstanceOnly, Category = Stat)
+	// int32 AppearIndex = 0;
 
 	UPROPERTY(ReplicatedUsing=OnRep_CurrentHp, Transient, VisibleInstanceOnly, Category = Stat) 
 	float CurrentHp;
