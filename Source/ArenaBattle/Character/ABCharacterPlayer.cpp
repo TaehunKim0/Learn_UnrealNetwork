@@ -176,15 +176,12 @@ void AABCharacterPlayer::OnRep_PlayerState()
 
 	Super::OnRep_PlayerState();
 	
-	if(GetPlayerState())
+	if(NameTag->GetWidget())
 	{
-		if(NameTag->GetWidget())
-		{
-			Cast<UABNameTagWidget>(NameTag->GetWidget())->UpdatePlayerNameTag();
-		}
-
-		Cast<AABPlayerState>(GetPlayerState())->SetCharacterAppearance();
+		Cast<UABNameTagWidget>(NameTag->GetWidget())->UpdatePlayerNameTag();
 	}
+
+	Cast<AABPlayerState>(GetPlayerState())->SetCharacterAppearance();
 	
 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
 }
