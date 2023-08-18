@@ -11,7 +11,11 @@
 void UABNameTagWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	UpdatePlayerNameTag();
+}
 
+void UABNameTagWidget::UpdatePlayerNameTag()
+{
 	APlayerState* PlayerState = Cast<ACharacter>(OwningActor)->GetPlayerState();
 	
 	if(PlayerState)

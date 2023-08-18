@@ -21,6 +21,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/PlayerState.h"
 #include "Player/ABPlayerState.h"
+#include "UI/ABNameTagWidget.h"
 #include "UI/ABWidgetComponent.h"
 
 AABCharacterPlayer::AABCharacterPlayer()
@@ -174,9 +175,15 @@ void AABCharacterPlayer::OnRep_PlayerState()
 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
 
 	Super::OnRep_PlayerState();
-
-	// SetNameTagWidget();
-
+	
+	if(GetPlayerState())
+	{
+		if(NameTag->GetWidget())
+		{
+			Cast<UABNameTagWidget>(NameTag->GetWidget())->UpdatePlayerNameTag();
+		}
+	}
+	
 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
 }
 

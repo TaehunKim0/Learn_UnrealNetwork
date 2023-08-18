@@ -17,6 +17,7 @@ class ARENABATTLE_API UABNameTagWidget : public UABUserWidget
 
 public:
 	virtual void NativeConstruct() override;
+	void UpdatePlayerNameTag();
 	
 	UPROPERTY(meta=(BindWidget))
 	class UTextBlock* PlayerName;
