@@ -175,7 +175,7 @@ void AABCharacterPlayer::OnRep_PlayerState()
 
 	Super::OnRep_PlayerState();
 
-	SetNameTagWidget();
+	// SetNameTagWidget();
 
 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
 }
@@ -353,26 +353,26 @@ void AABCharacterPlayer::SetupHUDWidget(UABHUDWidget* InHUDWidget)
 	}
 }
 
-void AABCharacterPlayer::SetNameTagWidget()
-{
-	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
-
-	if(GetPlayerState())
-	{
-		if(NameTag->GetWidget())
-		{
-			FString ID = FString::Printf(TEXT("%d"), GetPlayerState()->GetPlayerId());
-			FText PlayerName = FText::FromString(ID);
-
-			Cast<UTextBlock>(NameTag->GetWidget()->GetWidgetFromName(TEXT("PlayerName")))->SetText(PlayerName);
-		}
-		else
-		{
-			AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("NameTag->GetWidget() is nullptr"));
-		}
-	}
-	else
-	{
-		AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("PlayerState is nullptr"));
-	}
-}
+// void AABCharacterPlayer::SetNameTagWidget()
+// {
+// 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
+//
+// 	if(GetPlayerState())
+// 	{
+// 		if(NameTag->GetWidget())
+// 		{
+// 			FString ID = FString::Printf(TEXT("%d"), GetPlayerState()->GetPlayerId());
+// 			FText PlayerName = FText::FromString(ID);
+//
+// 			Cast<UTextBlock>(NameTag->GetWidget()->GetWidgetFromName(TEXT("PlayerName")))->SetText(PlayerName);
+// 		}
+// 		else
+// 		{
+// 			AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("NameTag->GetWidget() is nullptr"));
+// 		}
+// 	}
+// 	else
+// 	{
+// 		AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("PlayerState is nullptr"));
+// 	}
+// }

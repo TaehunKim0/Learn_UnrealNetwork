@@ -113,21 +113,10 @@ void AABPlayerController::OnPossess(APawn* aPawn)
 	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
 
 	Super::OnPossess(aPawn);
-	Cast<AABCharacterPlayer>(aPawn)->SetNameTagWidget();
+	// Cast<AABCharacterPlayer>(aPawn)->SetNameTagWidget();
 
 	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
 }
-
-//bool AABPlayerController::IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const
-//{
-//	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
-//
-//	bool IsRelevant = Super::IsNetRelevantFor(RealViewer, ViewTarget, SrcLocation);
-//
-//	AB_PCLOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
-//
-//	return IsRelevant;
-//}
 
 void AABPlayerController::BeginPlay()
 {

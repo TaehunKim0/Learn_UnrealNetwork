@@ -38,7 +38,7 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void SetNameTagWidget();
+	// void SetNameTagWidget();
 	
 // Character Control Section
 protected:
