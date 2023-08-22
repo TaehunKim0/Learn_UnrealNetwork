@@ -26,6 +26,9 @@ public:
 	virtual void PostNetInit() override;
 	virtual void PostNetReceive() override;
 
+	UFUNCTION()
+	void OnRep_KillScore();
+	
 	void SetCharacterAppearance();
 	
 	// UFUNCTION()
@@ -34,6 +37,9 @@ public:
 public:
 	UPROPERTY(Replicated, VisibleInstanceOnly, Category = Stat)
 	int32 AppearIndex = 0;
+
+	UPROPERTY(ReplicatedUsing = OnRep_KillScore, VisibleInstanceOnly, Category = Stat)
+	int32 KillScore = 0;
 	
 private:
 	UPROPERTY()

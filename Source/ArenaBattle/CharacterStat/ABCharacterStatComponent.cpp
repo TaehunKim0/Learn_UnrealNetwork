@@ -5,8 +5,11 @@
 
 #include "ArenaBattle.h"
 #include "Character/ABCharacterPlayer.h"
+#include "Components/WidgetComponent.h"
 #include "GameData/ABGameSingleton.h"
 #include "Net/UnrealNetwork.h"
+#include "Player/ABPlayerState.h"
+#include "UI/ABNameTagWidget.h"
 
 // Sets default values for this component's properties
 UABCharacterStatComponent::UABCharacterStatComponent()
@@ -49,7 +52,7 @@ void UABCharacterStatComponent::SetLevelStat(int32 InNewLevel)
 	check(BaseStat.MaxHp > 0.0f);
 }
 
-float UABCharacterStatComponent::ApplyDamage(float InDamage)
+float UABCharacterStatComponent::ApplyDamage(float InDamage, AActor* Attacker)
 {
 	const float PrevHp = CurrentHp;
 	const float ActualDamage = FMath::Clamp<float>(InDamage, 0, InDamage);
@@ -58,6 +61,22 @@ float UABCharacterStatComponent::ApplyDamage(float InDamage)
 	if (CurrentHp <= KINDA_SMALL_NUMBER)
 	{
 		OnHpZero.Broadcast();
+		const AABCharacterBase* AttackActor = Cast<AABCharacterBase>(Attacker);
+		if (AttackActor)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("킬스코어 올림!")));
+			Cast<AABPlayerState>(AttackActor->GetPlayerState())->KillScore += 1;
+
+			//서버코드
+			if(UUserWidget* NameTagClass = Cast<AABCharacterPlayer>(AttackActor)->NameTag->GetWidget())
+			{
+				Cast<UABNameTagWidget>(NameTagClass)->UpdatePlayerNameTag();
+			}
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("어태커 없음")));
+		}
 	}
 
 	return ActualDamage;

@@ -55,7 +55,7 @@ protected:
 	TObjectPtr<class UCameraComponent> FollowCamera;
 
 // UI Widget Section
-protected:
+public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UWidgetComponent> NameTag;
 

@@ -4,9 +4,11 @@
 #include "UI/ABNameTagWidget.h"
 
 #include "ArenaBattle.h"
+#include "Character/ABCharacterBase.h"
 #include "Components/TextBlock.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PlayerState.h"
+#include "Player/ABPlayerState.h"
 
 void UABNameTagWidget::NativeConstruct()
 {
@@ -16,13 +18,16 @@ void UABNameTagWidget::NativeConstruct()
 
 void UABNameTagWidget::UpdatePlayerNameTag()
 {
-	APlayerState* PlayerState = Cast<ACharacter>(OwningActor)->GetPlayerState();
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("이름 업데이트!")));
+	
+	AABPlayerState* PlayerState = Cast<AABPlayerState>(Cast<ACharacter>(OwningActor)->GetPlayerState());
 	
 	if(PlayerState)
 	{
-		FString ID = FString::Printf(TEXT("%d"), PlayerState->GetPlayerId());
+		FString KillScore = FString::Printf(TEXT("Score : %d \n"), PlayerState->KillScore);
+		FString ID = FString::Printf(TEXT("Name : %d"), PlayerState->GetPlayerId());
 			
-		FText PlayerIDString = FText::FromString(ID);
+		FText PlayerIDString = FText::FromString(KillScore + ID);
 		PlayerName->SetText(PlayerIDString);
 	}
 }

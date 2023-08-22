@@ -39,7 +39,7 @@ AABCharacterPlayer::AABCharacterPlayer()
 	// Widget Component 
 	NameTag = CreateDefaultSubobject<UABWidgetComponent>(TEXT("NameTag"));
 	NameTag->SetupAttachment(GetMesh());
-	NameTag->SetRelativeLocation(FVector(0.0f, 0.0f, 250.0f));
+	NameTag->SetRelativeLocation(FVector(0.0f, 0.0f, 300.0f));
 	static ConstructorHelpers::FClassFinder<UUserWidget> HpBarWidgetRef(TEXT("/Game/ArenaBattle/UI/WBP_NameTag.WBP_NameTag_C"));
 	if (HpBarWidgetRef.Class)
 	{

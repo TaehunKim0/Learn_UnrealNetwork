@@ -4,7 +4,9 @@
 #include "Player/ABPlayerState.h"
 #include "ArenaBattle.h"
 #include "Character/ABCharacterPlayer.h"
+#include "Components/WidgetComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "UI/ABNameTagWidget.h"
 
 AABPlayerState::AABPlayerState()
 {
@@ -32,6 +34,7 @@ void AABPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
 	DOREPLIFETIME(AABPlayerState, AppearIndex);
+	DOREPLIFETIME(AABPlayerState, KillScore);
 }
 
 void AABPlayerState::OnRep_PlayerId()
@@ -52,6 +55,17 @@ void AABPlayerState::PostNetInit()
 void AABPlayerState::PostNetReceive()
 {
 	Super::PostNetReceive();
+}
+
+void AABPlayerState::OnRep_KillScore()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("킬스코어 변경!")));
+	auto NameTagClass = Cast<AABCharacterPlayer>(GetPawn())->NameTag->GetWidget();
+
+	if(NameTagClass)
+	{
+		Cast<UABNameTagWidget>(NameTagClass)->UpdatePlayerNameTag();
+	}
 }
 
 void AABPlayerState::SetCharacterAppearance()
