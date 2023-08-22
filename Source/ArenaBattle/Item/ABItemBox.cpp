@@ -74,6 +74,8 @@ void AABItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor
 		return;
 	}
 
+	// Old 로 돌아가기
+	
 	Mesh->SetHiddenInGame(true);
 	SetActorEnableCollision(false);
 
@@ -84,13 +86,19 @@ void AABItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor
 	
 	if(Character->GetPlayerState())
 	{
-		Character->ServerRPCActivateItemEffect(this);
+		Character->MulticastRPCActivateItemEffect(this);
 	}
 	else
 	{
 		AABCharacterBase* LocalPlayer = Cast<AABCharacterBase>(GetWorld()->GetFirstPlayerController());
-		LocalPlayer->ServerRPCActivateItemEffect(this);
+		LocalPlayer->MulticastRPCActivateItemEffect(this);
 	}
+	
+	// RPC
+	// 플레이어 캐릭터 -> 이펙트 액터 스폰(오너가 플레이어인)
+	// 액터(이펙트 컴포넌트 가진)를 자체 스폰 -> 리플리케이트
+	   // Respawn Client -> Spawn Multicast
+	   // Spawn은 했는데 연관성이 있는지 없는지 거리로 판단 
 	
 	IABCharacterItemInterface* OverlappingPawn = Cast<IABCharacterItemInterface>(OtherActor);
 	if (OverlappingPawn)

@@ -28,6 +28,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnGameRetryCountCpp"))
 	void K2_OnGameRetryCount(int32 NewRetryCount);
 
+	void PlayerCountChanged(int32 NewPlayerCount);
 	void GameScoreChanged(int32 NewScore);
 	void GameClear();
 	void GameOver();
@@ -40,6 +41,13 @@ public:
 	virtual void OnRep_PlayerState() override;
 	virtual void PostNetReceive() override;
 	//virtual bool IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const override;
+
+public:
+	UFUNCTION(Server, Reliable)
+	void ServerRPCConnectPlayer();
+
+	void ConnectPlayer();
+	void RemoveLobbyWidget();
 	
 protected:
 	virtual void OnPossess(APawn* aPawn) override;
@@ -52,6 +60,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUD)
 	TObjectPtr<class UABHUDWidget> ABHUDWidget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UABLobbyWidget> LobbyWidget;
+
+	UPROPERTY()
+	TSubclassOf<class UABLobbyWidget> LobbyWidgetClass;
 
 // Save Game Section
 protected:

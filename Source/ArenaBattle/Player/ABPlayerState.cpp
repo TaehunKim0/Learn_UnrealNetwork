@@ -59,7 +59,6 @@ void AABPlayerState::PostNetReceive()
 
 void AABPlayerState::OnRep_KillScore()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("킬스코어 변경!")));
 	auto NameTagClass = Cast<AABCharacterPlayer>(GetPawn())->NameTag->GetWidget();
 
 	if(NameTagClass)

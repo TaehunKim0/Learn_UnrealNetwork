@@ -27,6 +27,8 @@ public:
 	virtual void OnPlayerScoreChanged(int32 NewPlayerScore) override;
 	virtual void OnPlayerDead() override;
 	virtual bool IsGameCleared() override;
+
+	void GameStart();
 	
 protected:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
@@ -36,7 +38,8 @@ protected:
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 
 	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal = TEXT("")) override;
-
+	virtual void StartPlay() override;
+	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)
 	int32 ClearScore;
@@ -50,5 +53,8 @@ public:
 	int32 AppearanceCount = 0;
 	
 	UPROPERTY()
-	TArray<FPlayerInfo> PlayerInfos; 
+	TArray<FPlayerInfo> PlayerInfos;
+
+	UPROPERTY()
+	int PlayerCount = 0;
 };

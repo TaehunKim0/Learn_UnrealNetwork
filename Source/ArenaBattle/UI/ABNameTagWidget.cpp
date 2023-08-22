@@ -18,8 +18,6 @@ void UABNameTagWidget::NativeConstruct()
 
 void UABNameTagWidget::UpdatePlayerNameTag()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("이름 업데이트!")));
-	
 	AABPlayerState* PlayerState = Cast<AABPlayerState>(Cast<ACharacter>(OwningActor)->GetPlayerState());
 	
 	if(PlayerState)

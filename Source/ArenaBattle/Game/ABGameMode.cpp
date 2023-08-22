@@ -4,6 +4,7 @@
 #include "Game/ABGameMode.h"
 #include "ABGameMode.h"
 
+#include "ABGameState.h"
 #include "ArenaBattle.h"
 #include "Character/ABCharacterBase.h"
 #include "GameFramework/PlayerState.h"
@@ -25,10 +26,12 @@ AABGameMode::AABGameMode()
 	}
 
 	PlayerStateClass = AABPlayerState::StaticClass();
+	GameStateClass = AABGameState::StaticClass();
 
 	ClearScore = 3;
 	CurrentScore = 0;
 	bIsCleared = false;
+
 }
 
 void AABGameMode::OnPlayerScoreChanged(int32 NewPlayerScore)
@@ -64,6 +67,18 @@ void AABGameMode::OnPlayerDead()
 bool AABGameMode::IsGameCleared()
 {
 	return bIsCleared;
+}
+
+void AABGameMode::GameStart()
+{
+	for(auto iter = GetWorld()->GetPlayerControllerIterator(); iter++;)
+	{
+		if (iter)
+		{
+			APlayerController * Controller = Cast<APlayerController>(*iter);
+			if(Controller) Controller->SetPause(false);
+		}
+	}
 }
 
 void AABGameMode::PostLogin(APlayerController* NewPlayer)
@@ -124,11 +139,12 @@ FString AABGameMode::InitNewPlayer(APlayerController* NewPlayerController, const
 {
 	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
 	FString NewPlayerString = Super::InitNewPlayer(NewPlayerController, UniqueId, Options, Portal);
-
-	auto state = NewPlayerController->GetPlayerState<APlayerState>();
-	AB_LOG(LogABNetwork, Log, TEXT("%d"), state->GetPlayerId());
-	
 	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
 	
 	return NewPlayerString;
+}
+
+void AABGameMode::StartPlay()
+{
+	AGameModeBase::StartPlay();
 }

@@ -345,11 +345,6 @@ void AABCharacterBase::ApplyStat(const FABCharacterStat& BaseStat, const FABChar
 	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
 }
 
-void AABCharacterBase::ServerRPCActivateItemEffect_Implementation(AABItemBox* ItemBox)
-{
-	MulticastRPCActivateItemEffect(ItemBox);
-}
-
 void AABCharacterBase::MulticastRPCActivateItemEffect_Implementation(AABItemBox* ItemBox)
 {
 	if(ItemBox)

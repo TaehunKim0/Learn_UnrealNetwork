@@ -120,10 +120,6 @@ public:
 
 // Event Section
 public:
-	UFUNCTION(Server, Unreliable)
-	void ServerRPCActivateItemEffect(AABItemBox* ItemBox);
-
-private:
 	UFUNCTION(NetMulticast, Unreliable)
 	void MulticastRPCActivateItemEffect(AABItemBox* ItemBox);
 };

@@ -64,7 +64,6 @@ float UABCharacterStatComponent::ApplyDamage(float InDamage, AActor* Attacker)
 		const AABCharacterBase* AttackActor = Cast<AABCharacterBase>(Attacker);
 		if (AttackActor)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("킬스코어 올림!")));
 			Cast<AABPlayerState>(AttackActor->GetPlayerState())->KillScore += 1;
 
 			//서버코드
@@ -72,10 +71,6 @@ float UABCharacterStatComponent::ApplyDamage(float InDamage, AActor* Attacker)
 			{
 				Cast<UABNameTagWidget>(NameTagClass)->UpdatePlayerNameTag();
 			}
-		}
-		else
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("어태커 없음")));
 		}
 	}
 
@@ -95,7 +90,6 @@ void UABCharacterStatComponent::OnRep_CurrentHp() const
 	if (CurrentHp <= KINDA_SMALL_NUMBER)
 	{
 		OnHpZero.Broadcast();
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("사망!")));
 	}
 }
 
