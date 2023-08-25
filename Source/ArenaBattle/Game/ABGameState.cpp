@@ -12,6 +12,7 @@ void AABGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 
 	DOREPLIFETIME(AABGameState, ConnectedPlayerCount);
 	DOREPLIFETIME(AABGameState, bIsGameStarted);
+	DOREPLIFETIME(AABGameState, bIsGameClear);
 }
 
 void AABGameState::OnRep_ConnectedPlayerCount()
@@ -37,6 +38,32 @@ void AABGameState::OnRep_GameStart()
 		{
 			ABPlayerController->RemoveLobbyWidget();
 			ABPlayerController->SetShowMouseCursor(false);
+		}
+	}
+}
+
+void AABGameState::OnRep_GameClear()
+{
+	UWorld * World = GetWorld();
+	if(World)
+	{
+		AABPlayerController* ABPlayerController = Cast<AABPlayerController>(World->GetFirstPlayerController());
+		if(ABPlayerController)
+		{
+			ABPlayerController->GameClear();
+		}
+	}
+}
+
+void AABGameState::OnPlayerScoreChanged(int32 NewPlayerKillScore)
+{
+	if(NewPlayerKillScore >= GameClearKillScore)
+	{
+		bIsGameClear = true;
+		AABPlayerController* ABPlayerController = Cast<AABPlayerController>(GetWorld()->GetFirstPlayerController());
+		if(ABPlayerController)
+		{
+			ABPlayerController->GameClear();
 		}
 	}
 }

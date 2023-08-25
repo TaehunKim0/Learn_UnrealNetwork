@@ -6,8 +6,11 @@
 #include "ArenaBattle.h"
 #include "Character/ABCharacterPlayer.h"
 #include "Components/WidgetComponent.h"
+#include "Game/ABGameMode.h"
+#include "Game/ABGameState.h"
 #include "GameData/ABGameSingleton.h"
 #include "Net/UnrealNetwork.h"
+#include "Player/ABPlayerController.h"
 #include "Player/ABPlayerState.h"
 #include "UI/ABNameTagWidget.h"
 
@@ -54,6 +57,8 @@ void UABCharacterStatComponent::SetLevelStat(int32 InNewLevel)
 
 float UABCharacterStatComponent::ApplyDamage(float InDamage, AActor* Attacker)
 {
+	// 서버에서만 실행됨.
+	
 	const float PrevHp = CurrentHp;
 	const float ActualDamage = FMath::Clamp<float>(InDamage, 0, InDamage);
 
@@ -63,10 +68,20 @@ float UABCharacterStatComponent::ApplyDamage(float InDamage, AActor* Attacker)
 		OnHpZero.Broadcast();
 		const AABCharacterBase* AttackActor = Cast<AABCharacterBase>(Attacker);
 		if (AttackActor)
-		{
-			Cast<AABPlayerState>(AttackActor->GetPlayerState())->KillScore += 1;
+		{	
+			AABPlayerState* PlayerState = Cast<AABPlayerState>(AttackActor->GetPlayerState());
+			if(PlayerState)
+			{
+				PlayerState->KillScore += 1;
 
-			//서버코드
+				UWorld* World = GetWorld();
+				AABGameState* GameState =  Cast<AABGameState>(World->GetGameState());
+				if(GameState)
+				{
+					GameState->OnPlayerScoreChanged(PlayerState->KillScore);
+				}
+			}
+
 			if(UUserWidget* NameTagClass = Cast<AABCharacterPlayer>(AttackActor)->NameTag->GetWidget())
 			{
 				Cast<UABNameTagWidget>(NameTagClass)->UpdatePlayerNameTag();

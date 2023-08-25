@@ -54,7 +54,4 @@ public:
 	
 	UPROPERTY()
 	TArray<FPlayerInfo> PlayerInfos;
-
-	UPROPERTY()
-	int PlayerCount = 0;
 };

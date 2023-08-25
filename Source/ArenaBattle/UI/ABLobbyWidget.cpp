@@ -3,13 +3,9 @@
 
 #include "UI/ABLobbyWidget.h"
 
-#include "LocalizationDescriptor.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
-#include "Game/ABGameMode.h"
 #include "Game/ABGameState.h"
-#include "GameFramework/Character.h"
-#include "GameFramework/GameModeBase.h"
 #include "Player/ABPlayerController.h"
 
 void UABLobbyWidget::NativeConstruct()
@@ -48,7 +44,6 @@ void UABLobbyWidget::GameStart()
 		{
 			GameState->bIsGameStarted = true;
 			RemoveFromParent();
-			Button->SetIsEnabled(false);
 			World->GetFirstPlayerController()->SetShowMouseCursor(false);
 		}
 		else

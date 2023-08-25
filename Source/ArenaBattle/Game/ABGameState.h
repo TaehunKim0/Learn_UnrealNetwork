@@ -23,10 +23,22 @@ public:
 
 	UFUNCTION()
 	void OnRep_GameStart();
-	
+
+	UFUNCTION()
+	void OnRep_GameClear();
+
+public:
+	void OnPlayerScoreChanged(int32 NewPlayerKillScore);
+
+public:
 	UPROPERTY(ReplicatedUsing = OnRep_ConnectedPlayerCount)
 	int32 ConnectedPlayerCount = 0;
 
+	const int32 GameClearKillScore = 4;
+
 	UPROPERTY(ReplicatedUsing = OnRep_GameStart)
 	bool bIsGameStarted = false;
+
+	UPROPERTY(ReplicatedUsing = OnRep_GameClear)
+	bool bIsGameClear = false;
 };

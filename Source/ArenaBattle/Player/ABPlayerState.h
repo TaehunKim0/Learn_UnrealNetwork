@@ -35,10 +35,10 @@ public:
 	// void OnRep_AppearIndex();
 
 public:
-	UPROPERTY(Replicated, VisibleInstanceOnly, Category = Stat)
+	UPROPERTY(Replicated, VisibleInstanceOnly)
 	int32 AppearIndex = 0;
 
-	UPROPERTY(ReplicatedUsing = OnRep_KillScore, VisibleInstanceOnly, Category = Stat)
+	UPROPERTY(ReplicatedUsing = OnRep_KillScore, VisibleInstanceOnly)
 	int32 KillScore = 0;
 	
 private:
