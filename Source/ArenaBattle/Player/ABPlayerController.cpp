@@ -185,7 +185,11 @@ void AABPlayerController::BeginPlay()
 	K2_OnGameRetryCount(SaveGameInstance->RetryCount);
 
 // Widget
-	if(IsLocalController())
+
+	FString LevelName = GetWorld()->GetMapName();
+	LevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix); // PIE모드에서는 레벨이름앞에 UEDPIE값이 추가될 수 있으므로 실제 맵이름을 가져오기 위해 앞에값을 지워줌
+	
+	if(IsLocalController() && LevelName == "Lobby") // 원래 로비위젯은 로비전용 플레이어 컨트롤러를 만들어 코드를 분리하는게 좋음!
 	{
 		LobbyWidget = CreateWidget<UABLobbyWidget>(GetWorld(), LobbyWidgetClass);
 		if(LobbyWidget == nullptr)

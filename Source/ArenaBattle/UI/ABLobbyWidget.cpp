@@ -45,6 +45,7 @@ void UABLobbyWidget::GameStart()
 			GameState->bIsGameStarted = true;
 			RemoveFromParent();
 			World->GetFirstPlayerController()->SetShowMouseCursor(false);
+			World->ServerTravel("/Game/ArenaBattle/Maps/PVP?listen");
 		}
 		else
 		{
