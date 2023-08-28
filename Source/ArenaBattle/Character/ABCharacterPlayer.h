@@ -79,6 +79,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> AttackAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> SkillAction;
+
 	void ShoulderMove(const FInputActionValue& Value);
 	void ShoulderLook(const FInputActionValue& Value);
 
@@ -97,6 +100,32 @@ protected:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastRPCAttack();
+
+// Skill Action
+public:
+	class UABSkillActionData* GetSkillActionData() { return SkillActionData; }
+	float GetCurrentSkillTimerRate() { return GetWorldTimerManager().GetTimerElapsed(SkillTimerHandle); }
+	bool bCanSkillAttack = true;
+	
+protected:
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerRPCSkillAttack();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastRPCSkillAttack();
+
+	void SkillAttack();
+	void SkillEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded);
+	void SetSkillTimer();
+	void SetEffectiveSkillAttack();
+	FTimerHandle SkillTimerHandle;
+	
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UABSkillActionData> SkillActionData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> SkillActionMontage;
 
 // UI Section
 protected:

@@ -8,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "ABCharacterControlData.h"
+#include "ABSkillActionData.h"
 #include "ArenaBattle.h"
 #include "Animation/ABAnimInstance.h"
 #include "Blueprint/WidgetTree.h"
@@ -86,6 +87,18 @@ AABCharacterPlayer::AABCharacterPlayer()
 		AttackAction = InputActionAttackRef.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionSkillRef(TEXT("/Script/EnhancedInput.InputAction'/Game/ArenaBattle/Input/Actions/IA_Skill.IA_Skill'"));
+	if (nullptr != InputActionSkillRef.Object)
+	{
+		SkillAction = InputActionSkillRef.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UABSkillActionData> SkillActionDataRef(TEXT("/Script/ArenaBattle.ABComboActionData'/Game/ArenaBattle/CharacterAction/ABA_SkillAttack.ABA_SkillAttack'"));
+	if (SkillActionDataRef.Object)
+	{
+		SkillActionData = SkillActionDataRef.Object;
+	}
+
 	CurrentCharacterControlType = ECharacterControlType::Quater;
 }
 
@@ -153,12 +166,6 @@ void AABCharacterPlayer::SetRespawn()
 void AABCharacterPlayer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
-	// GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("Current HP : %f"), Stat->GetCurrentHp()));
-	// if(GetNetMode() == ENetMode::NM_Client && IsLocallyControlled())
-	// {
-	// 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("current hp : %f"), Stat->GetCurrentHp()));
-	// }
 }
 
 void AABCharacterPlayer::PostNetInit()
@@ -186,27 +193,6 @@ void AABCharacterPlayer::OnRep_PlayerState()
 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
 }
 
-// void AABCharacterPlayer::PreReplication(IRepChangedPropertyTracker& ChangedPropertyTracker)
-// {
-// 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
-// 	
-// 	Super::PreReplication(ChangedPropertyTracker);
-// 	
-// 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
-// }
-//
-// bool AABCharacterPlayer::IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget,
-// 	const FVector& SrcLocation) const
-// {
-// 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
-// 	
-// 	bool IsRelevant = Super::IsNetRelevantFor(RealViewer, ViewTarget, SrcLocation);
-// 	
-// 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("End"));
-// 	
-// 	return IsRelevant;
-// }
-
 void AABCharacterPlayer::OnDeadMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	if (Montage == DeadMontage)
@@ -228,6 +214,7 @@ void AABCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* Player
 	EnhancedInputComponent->BindAction(ShoulderLookAction, ETriggerEvent::Triggered, this, &AABCharacterPlayer::ShoulderLook);
 	EnhancedInputComponent->BindAction(QuaterMoveAction, ETriggerEvent::Triggered, this, &AABCharacterPlayer::QuaterMove);
 	EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AABCharacterPlayer::Attack);
+	EnhancedInputComponent->BindAction(SkillAction, ETriggerEvent::Triggered, this, &AABCharacterPlayer::ServerRPCSkillAttack);
 }
 
 void AABCharacterPlayer::ChangeCharacterControl()
@@ -347,6 +334,57 @@ void AABCharacterPlayer::MulticastRPCAttack_Implementation()
 	ProcessComboCommand();
 }
 
+void AABCharacterPlayer::ServerRPCSkillAttack_Implementation()
+{
+	MulticastRPCSkillAttack();
+}
+
+bool AABCharacterPlayer::ServerRPCSkillAttack_Validate()
+{
+	return true;
+}
+
+void AABCharacterPlayer::MulticastRPCSkillAttack_Implementation()
+{
+	SkillAttack();
+}
+
+void AABCharacterPlayer::SkillAttack()
+{
+	if (!bCanSkillAttack) return;
+	
+	bCanSkillAttack = false;
+	
+	// Movement Setting
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+
+	// Animation Setting
+	const float AttackSpeedRate = Stat->GetTotalStat().AttackSpeed;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->Montage_Play(SkillActionMontage, AttackSpeedRate);
+
+	FOnMontageEnded EndDelegate;
+	EndDelegate.BindUObject(this, &AABCharacterPlayer::SkillEnd);
+	AnimInstance->Montage_SetEndDelegate(EndDelegate, SkillActionMontage);
+}
+
+void AABCharacterPlayer::SkillEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded)
+{
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	SetSkillTimer();
+}
+
+void AABCharacterPlayer::SetSkillTimer()
+{
+	GetWorld()->GetTimerManager().SetTimer(SkillTimerHandle, this, &AABCharacterPlayer::SetEffectiveSkillAttack, SkillActionData->SkillCoolTime, false);
+}
+
+void AABCharacterPlayer::SetEffectiveSkillAttack()
+{
+	bCanSkillAttack = true;
+	SkillTimerHandle.Invalidate();
+}
+
 void AABCharacterPlayer::SetupHUDWidget(UABHUDWidget* InHUDWidget)
 {
 	if (InHUDWidget)
@@ -358,27 +396,3 @@ void AABCharacterPlayer::SetupHUDWidget(UABHUDWidget* InHUDWidget)
 		Stat->OnHpChanged.AddUObject(InHUDWidget, &UABHUDWidget::UpdateHpBar);
 	}
 }
-
-// void AABCharacterPlayer::SetNameTagWidget()
-// {
-// 	AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("Begin"));
-//
-// 	if(GetPlayerState())
-// 	{
-// 		if(NameTag->GetWidget())
-// 		{
-// 			FString ID = FString::Printf(TEXT("%d"), GetPlayerState()->GetPlayerId());
-// 			FText PlayerName = FText::FromString(ID);
-//
-// 			Cast<UTextBlock>(NameTag->GetWidget()->GetWidgetFromName(TEXT("PlayerName")))->SetText(PlayerName);
-// 		}
-// 		else
-// 		{
-// 			AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("NameTag->GetWidget() is nullptr"));
-// 		}
-// 	}
-// 	else
-// 	{
-// 		AB_PAWNLOG(LogABNetwork, Log, TEXT("[%s] %s"), *GetName(), TEXT("PlayerState is nullptr"));
-// 	}
-// }
