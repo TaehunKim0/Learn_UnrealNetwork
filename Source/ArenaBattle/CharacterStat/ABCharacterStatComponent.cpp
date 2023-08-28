@@ -75,10 +75,10 @@ float UABCharacterStatComponent::ApplyDamage(float InDamage, AActor* Attacker)
 				PlayerState->KillScore += 1;
 
 				UWorld* World = GetWorld();
-				AABGameState* GameState =  Cast<AABGameState>(World->GetGameState());
-				if(GameState)
+				AABGameMode* GameMode =  Cast<AABGameMode>(World->GetAuthGameMode());
+				if(GameMode)
 				{
-					GameState->OnPlayerScoreChanged(PlayerState->KillScore);
+					GameMode->OnPlayerScoreChanged(PlayerState->KillScore);
 				}
 			}
 

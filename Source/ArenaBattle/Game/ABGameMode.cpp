@@ -31,7 +31,6 @@ AABGameMode::AABGameMode()
 	ClearScore = 3;
 	CurrentScore = 0;
 	bIsCleared = false;
-
 }
 
 void AABGameMode::OnPlayerScoreChanged(int32 NewPlayerScore)
@@ -46,6 +45,13 @@ void AABGameMode::OnPlayerScoreChanged(int32 NewPlayerScore)
 
 	if (CurrentScore >= ClearScore)
 	{
+		AABGameState * ABGameState = Cast<AABGameState>(GameState);
+		if (ABGameState)
+		{
+			ABGameState->bIsGameClear = true;
+			BackToLobby();
+		}
+		
 		bIsCleared = true;
 
 		if (ABPlayerController)
@@ -83,8 +89,25 @@ void AABGameMode::JoinPlayer()
 	AABGameState* State = Cast<AABGameState>(GameState);
 	if (State)
 	{
+		UE_LOG(LogClass, Log, TEXT("JoinPlayer"));
 		State->ConnectedPlayerCount++;
 	}
+}
+
+void AABGameMode::BackToLobby()
+{
+	FTimerDelegate TimerDelegate;
+	FTimerManager & TimerManager = GetWorldTimerManager();
+	UWorld * World = GetWorld();
+
+	UE_LOG(LogClass, Log, TEXT("BackToLobby1"));
+	TimerDelegate.BindLambda([World] ()
+	{
+		UE_LOG(LogClass, Log, TEXT("BackToLobby2"));
+		World->ServerTravel("/Game/ArenaBattle/Maps/Lobby?listen");	
+	});
+
+	TimerManager.SetTimer(BackToLobbyTimerHandle, TimerDelegate, 5.0f, false);
 }
 
 int32 AABGameMode::GetPlayerCount() const

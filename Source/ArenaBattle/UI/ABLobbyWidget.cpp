@@ -41,7 +41,7 @@ void UABLobbyWidget::GameStart()
 	AABGameMode * GameMode = Cast<AABGameMode>(World->GetAuthGameMode());
 	if(GameMode)
 	{
-		if(GameMode->GetPlayerCount() >= 4)
+		if(GameMode->GetPlayerCount() >= 1)
 		{
 			GameMode->GameStart();
 			RemoveFromParent();

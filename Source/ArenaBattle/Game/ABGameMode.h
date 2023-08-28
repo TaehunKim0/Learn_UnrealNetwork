@@ -30,6 +30,10 @@ public:
 
 	void GameStart();
 	void JoinPlayer();
+	
+	UFUNCTION(BLueprintCallable)
+	void BackToLobby();
+	
 	int32 GetPlayerCount() const;
 	
 protected:
@@ -55,4 +59,7 @@ public:
 	
 	UPROPERTY()
 	TArray<FPlayerInfo> PlayerInfos;
+
+private:
+	FTimerHandle BackToLobbyTimerHandle;
 };

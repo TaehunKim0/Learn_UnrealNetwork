@@ -134,9 +134,13 @@ void AABPlayerController::ServerRPCConnectPlayer_Implementation()
 void AABPlayerController::ConnectPlayer()
 {
 	UWorld * World = GetWorld();
-	AABGameMode *GameMode = Cast<AABGameMode>(UGameplayStatics::GetGameMode(World));
-	if(GameMode == nullptr) return;
-
+	AABGameMode *GameMode = Cast<AABGameMode>(World->GetAuthGameMode());
+	if(GameMode == nullptr)
+	{
+		UE_LOG(LogABPlayerController, Error, TEXT("GameMode is nullptr"));
+		return;
+	}
+	
 	GameMode->JoinPlayer();
 
 	AABPlayerController* PC = Cast<AABPlayerController>(World->GetFirstPlayerController());
