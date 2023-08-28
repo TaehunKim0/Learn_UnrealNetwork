@@ -30,10 +30,7 @@ public:
 
 	void GameStart();
 	void JoinPlayer();
-	
-	UFUNCTION(BLueprintCallable)
 	void BackToLobby();
-	
 	int32 GetPlayerCount() const;
 	
 protected:
@@ -44,7 +41,12 @@ protected:
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 
 	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal = TEXT("")) override;
-	
+
+	virtual void StartPlay() override;
+	virtual void HandleMatchIsWaitingToStart() override;
+	virtual void HandleMatchHasStarted() override;
+	virtual void HandleMatchHasEnded() override;
+	FTimerHandle
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)
 	int32 ClearScore;

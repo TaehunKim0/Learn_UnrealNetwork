@@ -183,3 +183,39 @@ FString AABGameMode::InitNewPlayer(APlayerController* NewPlayerController, const
 	
 	return NewPlayerString;
 }
+
+void AABGameMode::StartPlay()
+{
+	AB_LOG(LogABNetwork, Log, TEXT("Match State : %s"), *GetMatchState().ToString());
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	Super::StartPlay(); // 모든 액터 준비 끝 
+	
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+	AB_LOG(LogABNetwork, Log, TEXT("Match State : %s"), *GetMatchState().ToString());
+}
+
+void AABGameMode::HandleMatchIsWaitingToStart()
+{
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+	Super::HandleMatchIsWaitingToStart();
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+}
+
+void AABGameMode::HandleMatchHasStarted()
+{
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+	Super::HandleMatchHasStarted();
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+	
+	// 모든 액터 Begin Play 호출 된 상태
+}
+
+void AABGameMode::HandleMatchHasEnded()
+{
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+	Super::HandleMatchHasEnded();
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
+	
+	// 이제 새로운 플레이어 허용되지 않음.
+}
