@@ -5,6 +5,7 @@
 
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
+#include "Game/ABGameMode.h"
 #include "Game/ABGameState.h"
 #include "Player/ABPlayerController.h"
 
@@ -37,12 +38,12 @@ void UABLobbyWidget::SetIsClient(bool bNewIsClient)
 void UABLobbyWidget::GameStart()
 {
 	UWorld* World = GetWorld();
-	AABGameState* GameState = Cast<AABGameState>(World->GetGameState());
-	if(GameState)
+	AABGameMode * GameMode = Cast<AABGameMode>(World->GetAuthGameMode());
+	if(GameMode)
 	{
-		if(GameState->ConnectedPlayerCount >= 4)
+		if(GameMode->GetPlayerCount() >= 4)
 		{
-			GameState->bIsGameStarted = true;
+			GameMode->GameStart();
 			RemoveFromParent();
 			World->GetFirstPlayerController()->SetShowMouseCursor(false);
 			World->ServerTravel("/Game/ArenaBattle/Maps/PVP?listen");
@@ -56,14 +57,9 @@ void UABLobbyWidget::GameStart()
 
 void UABLobbyWidget::Join()
 {
-	UWorld* World = GetWorld();
-	AABGameState* GameState = Cast<AABGameState>(World->GetGameState());
-	if(GameState)
-	{
-		AABPlayerController* PC = Cast<AABPlayerController>(GetOwningPlayer());
-		if(PC) PC->ServerRPCConnectPlayer();
-		
-		Button->SetIsEnabled(false);
-		NoticeText->SetText(FText::FromString(TEXT("게임에 접속했습니다.")));
-	}
+	AABPlayerController* PC = Cast<AABPlayerController>(GetOwningPlayer());
+	if(PC) PC->ServerRPCConnectPlayer();
+	
+	Button->SetIsEnabled(false);
+	NoticeText->SetText(FText::FromString(TEXT("게임에 접속했습니다.")));
 }

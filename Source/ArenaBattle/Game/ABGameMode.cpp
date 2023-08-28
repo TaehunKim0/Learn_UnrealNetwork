@@ -71,14 +71,31 @@ bool AABGameMode::IsGameCleared()
 
 void AABGameMode::GameStart()
 {
-	for(auto iter = GetWorld()->GetPlayerControllerIterator(); iter++;)
+	AABGameState* State = Cast<AABGameState>(GameState);
+	if (State)
 	{
-		if (iter)
-		{
-			APlayerController * Controller = Cast<APlayerController>(*iter);
-			if(Controller) Controller->SetPause(false);
-		}
+		State->bIsGameStarted = true;
 	}
+}
+
+void AABGameMode::JoinPlayer()
+{
+	AABGameState* State = Cast<AABGameState>(GameState);
+	if (State)
+	{
+		State->ConnectedPlayerCount++;
+	}
+}
+
+int32 AABGameMode::GetPlayerCount() const
+{
+	AABGameState* State = Cast<AABGameState>(GameState);
+	if (State)
+	{
+		return State->ConnectedPlayerCount;
+	}
+
+	return 0;
 }
 
 void AABGameMode::PostLogin(APlayerController* NewPlayer)
@@ -142,19 +159,4 @@ FString AABGameMode::InitNewPlayer(APlayerController* NewPlayerController, const
 	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
 	
 	return NewPlayerString;
-}
-
-void AABGameMode::StartPlay()
-{
-	AGameModeBase::StartPlay();
-}
-
-void AABGameMode::StartMatch()
-{
-	Super::StartMatch();
-}
-
-void AABGameMode::EndMatch()
-{
-	Super::EndMatch();
 }

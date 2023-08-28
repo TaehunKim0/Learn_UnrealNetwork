@@ -29,6 +29,8 @@ public:
 	virtual bool IsGameCleared() override;
 
 	void GameStart();
+	void JoinPlayer();
+	int32 GetPlayerCount() const;
 	
 protected:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
@@ -38,10 +40,6 @@ protected:
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 
 	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal = TEXT("")) override;
-	virtual void StartPlay() override;
-
-	virtual void StartMatch() override;
-	virtual void EndMatch() override;
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)

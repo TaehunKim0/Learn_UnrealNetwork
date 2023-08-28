@@ -9,11 +9,10 @@
 #include "ABSaveGame.h"
 #include "ArenaBattle.h"
 #include "Character/ABCharacterPlayer.h"
-#include "Game/ABGameState.h"
+#include "Game/ABGameMode.h"
 #include "UI/ABLobbyWidget.h"
 #include "GameFramework/PlayerState.h"
 
-class AABGameState;
 DEFINE_LOG_CATEGORY(LogABPlayerController);
 
 AABPlayerController::AABPlayerController()
@@ -134,15 +133,16 @@ void AABPlayerController::ServerRPCConnectPlayer_Implementation()
 
 void AABPlayerController::ConnectPlayer()
 {
-	UWorld *World = GetWorld();
-	AABGameState* GameState = Cast<AABGameState>(World->GetGameState());
-	if(GameState == nullptr) return;
+	UWorld * World = GetWorld();
+	AABGameMode *GameMode = Cast<AABGameMode>(UGameplayStatics::GetGameMode(World));
+	if(GameMode == nullptr) return;
+
+	GameMode->JoinPlayer();
 
 	AABPlayerController* PC = Cast<AABPlayerController>(World->GetFirstPlayerController());
 	if(PC)
 	{
-		GameState->ConnectedPlayerCount++; //OnRep
-		PC->PlayerCountChanged(GameState->ConnectedPlayerCount);
+		PC->PlayerCountChanged(GameMode->GetPlayerCount());
 	}
 }
 
@@ -197,6 +197,7 @@ void AABPlayerController::BeginPlay()
 			UE_LOG(LogTemp, Error, TEXT("LobbyWidget is nullptr"));
 			return;
 		}
+		
 		if(HasAuthority())
 			LobbyWidget->SetIsClient(false);
 		else
