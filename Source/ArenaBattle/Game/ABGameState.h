@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameStateBase.h"
+#include "GameFramework/GameState.h"
 #include "ABGameState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ARENABATTLE_API AABGameState : public AGameStateBase
+class ARENABATTLE_API AABGameState : public AGameState
 {
 	GENERATED_BODY()
 

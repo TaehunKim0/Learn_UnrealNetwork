@@ -148,3 +148,13 @@ void AABGameMode::StartPlay()
 {
 	AGameModeBase::StartPlay();
 }
+
+void AABGameMode::StartMatch()
+{
+	Super::StartMatch();
+}
+
+void AABGameMode::EndMatch()
+{
+	Super::EndMatch();
+}

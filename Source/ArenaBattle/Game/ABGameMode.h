@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
+#include "GameFramework/GameMode.h"
 #include "Interface/ABGameInterface.h"
 #include "ABGameMode.generated.h"
 
@@ -17,7 +17,7 @@ struct FPlayerInfo
 
 
 UCLASS()
-class ARENABATTLE_API AABGameMode : public AGameModeBase, public IABGameInterface
+class ARENABATTLE_API AABGameMode : public AGameMode, public IABGameInterface
 {
 	GENERATED_BODY()
 	
@@ -39,6 +39,9 @@ protected:
 
 	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal = TEXT("")) override;
 	virtual void StartPlay() override;
+
+	virtual void StartMatch() override;
+	virtual void EndMatch() override;
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)
