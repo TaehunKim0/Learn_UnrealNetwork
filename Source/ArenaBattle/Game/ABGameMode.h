@@ -46,7 +46,7 @@ protected:
 	virtual void HandleMatchIsWaitingToStart() override;
 	virtual void HandleMatchHasStarted() override;
 	virtual void HandleMatchHasEnded() override;
-	FTimerHandle
+	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)
 	int32 ClearScore;

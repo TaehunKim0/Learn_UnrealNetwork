@@ -118,8 +118,8 @@ protected:
 	void SkillEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded);
 	void SetSkillTimer();
 	void SetEffectiveSkillAttack();
-	FTimerHandle SkillTimerHandle;
 	
+	FTimerHandle SkillTimerHandle;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UABSkillActionData> SkillActionData;
