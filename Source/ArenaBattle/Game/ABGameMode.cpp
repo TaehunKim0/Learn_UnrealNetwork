@@ -77,10 +77,12 @@ bool AABGameMode::IsGameCleared()
 
 void AABGameMode::GameStart()
 {
+	UWorld* World = GetWorld();
 	AABGameState* State = Cast<AABGameState>(GameState);
 	if (State)
 	{
 		State->bIsGameStarted = true;
+		World->ServerTravel("/Game/ArenaBattle/Maps/PVP?listen");
 	}
 }
 
@@ -89,7 +91,6 @@ void AABGameMode::JoinPlayer()
 	AABGameState* State = Cast<AABGameState>(GameState);
 	if (State)
 	{
-		UE_LOG(LogClass, Log, TEXT("JoinPlayer"));
 		State->ConnectedPlayerCount++;
 	}
 }
@@ -100,10 +101,8 @@ void AABGameMode::BackToLobby()
 	FTimerManager & TimerManager = GetWorldTimerManager();
 	UWorld * World = GetWorld();
 
-	UE_LOG(LogClass, Log, TEXT("BackToLobby1"));
 	TimerDelegate.BindLambda([World] ()
 	{
-		UE_LOG(LogClass, Log, TEXT("BackToLobby2"));
 		World->ServerTravel("/Game/ArenaBattle/Maps/Lobby?listen");	
 	});
 
@@ -189,7 +188,7 @@ void AABGameMode::StartPlay()
 	AB_LOG(LogABNetwork, Log, TEXT("Match State : %s"), *GetMatchState().ToString());
 	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
 
-	Super::StartPlay(); // 모든 액터 준비 끝 
+	Super::StartPlay(); // 모든 액터 준비 끝
 	
 	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
 	AB_LOG(LogABNetwork, Log, TEXT("Match State : %s"), *GetMatchState().ToString());

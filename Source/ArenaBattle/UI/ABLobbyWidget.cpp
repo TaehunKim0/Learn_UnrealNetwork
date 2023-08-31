@@ -41,12 +41,11 @@ void UABLobbyWidget::GameStart()
 	AABGameMode * GameMode = Cast<AABGameMode>(World->GetAuthGameMode());
 	if(GameMode)
 	{
-		if(GameMode->GetPlayerCount() >= 1)
+		if(GameMode->GetPlayerCount() >= 4)
 		{
 			GameMode->GameStart();
 			RemoveFromParent();
 			World->GetFirstPlayerController()->SetShowMouseCursor(false);
-			World->ServerTravel("/Game/ArenaBattle/Maps/PVP?listen");
 		}
 		else
 		{
