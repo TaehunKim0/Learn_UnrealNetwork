@@ -58,7 +58,7 @@ void UABLobbyWidget::Join()
 {
 	AABPlayerController* PC = Cast<AABPlayerController>(GetOwningPlayer());
 	if(PC) PC->ServerRPCConnectPlayer();
-	
+
 	Button->SetIsEnabled(false);
 	NoticeText->SetText(FText::FromString(TEXT("게임에 접속했습니다.")));
 }

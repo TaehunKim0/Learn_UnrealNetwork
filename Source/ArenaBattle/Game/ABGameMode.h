@@ -46,6 +46,8 @@ protected:
 	virtual void HandleMatchIsWaitingToStart() override;
 	virtual void HandleMatchHasStarted() override;
 	virtual void HandleMatchHasEnded() override;
+
+	virtual void Logout(AController* Exiting) override;
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)
@@ -60,7 +62,7 @@ public:
 	int32 AppearanceCount = 0;
 	
 	UPROPERTY()
-	TArray<FPlayerInfo> PlayerInfos;
+	TMap<int32, FPlayerInfo> PlayerInfos;
 
 private:
 	FTimerHandle BackToLobbyTimerHandle;

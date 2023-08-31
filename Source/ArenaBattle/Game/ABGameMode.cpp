@@ -131,9 +131,12 @@ void AABGameMode::PostLogin(APlayerController* NewPlayer)
 	AABCharacterBase* PlayerCharacter = Cast<AABCharacterBase>(NewPlayer->GetPawn());
 	if (PlayerCharacter)
 	{
-		PlayerInfos.Add({PlayerCharacter->GetPlayerState()->GetPlayerId()});
+		static int Count = 0;
+		Count++;
+		PlayerInfos.Add(Count, {PlayerCharacter->GetPlayerState()->GetPlayerId()});
 
 		AABPlayerState* PlayerState = Cast<AABPlayerState>(PlayerCharacter->GetPlayerState());
+		PlayerState->OwnClientOrder = Count;
 		PlayerState->AppearIndex = AppearanceCount;
 
 		AppearanceCount++;
@@ -181,6 +184,25 @@ FString AABGameMode::InitNewPlayer(APlayerController* NewPlayerController, const
 	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("End"));
 	
 	return NewPlayerString;
+}
+
+void AABGameMode::Logout(AController* Exiting)
+{
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+	Super::Logout(Exiting);
+	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
+
+	AABGameState* State = GetGameState<AABGameState>();
+	AABPlayerController* ABPlayerController = Cast<AABPlayerController>(Exiting);
+	if (State)
+	{
+		State->ConnectedPlayerCount = NumPlayers;
+	
+		if (ABPlayerController)
+		{
+			ABPlayerController->PlayerCountChanged(State->ConnectedPlayerCount);
+		}
+	}
 }
 
 void AABGameMode::StartPlay()

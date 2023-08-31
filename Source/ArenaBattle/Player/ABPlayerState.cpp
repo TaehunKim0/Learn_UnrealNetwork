@@ -21,6 +21,8 @@ AABPlayerState::AABPlayerState()
 	CharacterSkeletalMeshes.Add(CharacterMeshRef2.Object);
 	CharacterSkeletalMeshes.Add(CharacterMeshRef3.Object);
 	CharacterSkeletalMeshes.Add(CharacterMeshRef4.Object);
+
+	bGameConnected = false;
 }
 
 void AABPlayerState::BeginPlay()

@@ -36,10 +36,18 @@ public:
 
 public:
 	UPROPERTY(Replicated, VisibleInstanceOnly)
+	bool bGameConnected = false;
+
+	UPROPERTY(Replicated, VisibleInstanceOnly)
+	int32 OwnClientOrder = 0;
+	
+	UPROPERTY(Replicated, VisibleInstanceOnly)
 	int32 AppearIndex = 0;
 
 	UPROPERTY(ReplicatedUsing = OnRep_KillScore, VisibleInstanceOnly)
 	int32 KillScore = 0;
+
+	
 	
 private:
 	UPROPERTY()
