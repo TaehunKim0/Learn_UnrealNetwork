@@ -105,21 +105,21 @@ protected:
 public:
 	class UABSkillActionData* GetSkillActionData() { return SkillActionData; }
 	float GetCurrentSkillTimerRate() { return GetWorldTimerManager().GetTimerElapsed(SkillTimerHandle); }
-	bool bCanSkillAttack = true;
+	bool bCanSkillAttack = true; // 스킬 시전 가능여부
 	
 protected:
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerRPCSkillAttack();
+	void ServerRPCSkillAttack(); // 스킬 시전 서버 RPC
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastRPCSkillAttack();
+	void MulticastRPCSkillAttack(); // 스킬 시전 멀티캐스트 RPC
 
-	void SkillAttack();
-	void SkillEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded);
-	void SetSkillTimer();
-	void SetEffectiveSkillAttack();
+	void SkillAttack(); // 스킬 발동
+	void SkillEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded); //스킬 시전 종료 (몽타주 엔드 델리게이트에 바인딩함)
+	void SetSkillTimer(); // 스킬 쿨타임 시작
+	void SetEffectiveSkillAttack(); // 스킬 쿨타임 완료시 스킬 시전가능 상태로 변환
 	
-	FTimerHandle SkillTimerHandle;
+	FTimerHandle SkillTimerHandle; // 스킬 쿨타임 타이머 핸들
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UABSkillActionData> SkillActionData;

@@ -7,11 +7,6 @@
 #include "Character/ABSkillActionData.h"
 #include "Components/ProgressBar.h"
 
-void UABCharacterSkillWidget::NativeConstruct()
-{
-	Super::NativeConstruct();
-}
-
 void UABCharacterSkillWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
