@@ -336,7 +336,16 @@ void AABCharacterPlayer::MulticastRPCAttack_Implementation()
 
 void AABCharacterPlayer::ServerRPCSkillAttack_Implementation()
 {
-	MulticastRPCSkillAttack();
+	if(bCanSkillAttack)
+	{
+		UE_LOG(LogClass, Log, TEXT("Server 의 쿨타임이 끝남"));
+		
+		MulticastRPCSkillAttack();
+	}
+	else
+	{
+		UE_LOG(LogClass, Log, TEXT("Server 의 쿨타임이 끝나지 않음"));
+	}
 }
 
 bool AABCharacterPlayer::ServerRPCSkillAttack_Validate()
