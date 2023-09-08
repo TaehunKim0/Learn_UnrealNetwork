@@ -3,31 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataAsset.h"
-#include "Game/ABReplicateObject.h"
-#include "ABItemData.generated.h"
-
-UENUM(BlueprintType)
-enum class EItemType : uint8
-{
-	Weapon = 0,
-	Potion,
-	Scroll
-};
+#include "UObject/NoExportTypes.h"
+#include "ABReplicateObject.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ARENABATTLE_API UABItemData : public UPrimaryDataAsset
+class ARENABATTLE_API UABReplicateObject : public UObject
 {
 	GENERATED_BODY()
-	
-public:
-	FPrimaryAssetId GetPrimaryAssetId() const override
-	{
-		return FPrimaryAssetId("ABItemData", GetFName());
-	}
 
 	// Allows the Object to get a valid UWorld from it's outer.
 	virtual UWorld* GetWorld() const override
@@ -79,8 +64,4 @@ public:
 		}
 		return false;
 	}
-	
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Type)
-	EItemType Type;
 };

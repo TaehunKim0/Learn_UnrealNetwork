@@ -14,6 +14,7 @@
 #include "UI/ABWidgetComponent.h"
 #include "UI/ABHpBarWidget.h"
 #include "Item/ABItems.h"
+#include "Player/InventoryComponent.h"
 
 DEFINE_LOG_CATEGORY(LogABCharacter);
 
@@ -45,6 +46,10 @@ AABCharacterBase::AABCharacterBase()
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -100.0f), FRotator(0.0f, -90.0f, 0.0f));
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
+
+	// Inventory Component
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+	InventoryComponent->SetIsReplicated(true);
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Cardboard.SK_CharM_Cardboard'"));
 
@@ -126,6 +131,13 @@ void AABCharacterBase::PostInitializeComponents()
 void AABCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AABCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AABCharacterBase, InventoryComponent);
 }
 
 void AABCharacterBase::SetCharacterControlData(const UABCharacterControlData* CharacterControlData)
@@ -294,7 +306,12 @@ void AABCharacterBase::MulticastRPCTakeItem_Implementation(UABItemData* InItemDa
 
 void AABCharacterBase::TakeItem(UABItemData* InItemData)
 {
-	MulticastRPCTakeItem(InItemData);
+	//MulticastRPCTakeItem(InItemData);
+
+	if (InItemData)
+	{
+		TakeItemActions[(uint8)InItemData->Type].ItemDelegate.ExecuteIfBound(InItemData);
+	}
 }
 
 void AABCharacterBase::DrinkPotion(UABItemData* InItemData)
@@ -343,6 +360,14 @@ void AABCharacterBase::ApplyStat(const FABCharacterStat& BaseStat, const FABChar
 {
 	float MovementSpeed = (BaseStat + ModifierStat).MovementSpeed;
 	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
+}
+
+void AABCharacterBase::UseInventory(TArray<UABItemData*> InItemDatas)
+{
+	for(auto ItemData : InItemDatas)
+	{
+		TakeItem(ItemData);
+	}
 }
 
 void AABCharacterBase::MulticastRPCActivateItemEffect_Implementation(AABItemBox* ItemBox)

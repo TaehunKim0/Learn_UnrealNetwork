@@ -11,6 +11,7 @@
 #include "ABItemData.h"
 #include "Character/ABCharacterBase.h"
 #include "Character/ABCharacterNonPlayer.h"
+#include "Player/InventoryComponent.h"
 
 // Sets default values
 AABItemBox::AABItemBox()
@@ -100,11 +101,16 @@ void AABItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor
 	   // Respawn Client -> Spawn Multicast
 	   // Spawn은 했는데 연관성이 있는지 없는지 거리로 판단 
 	
-	IABCharacterItemInterface* OverlappingPawn = Cast<IABCharacterItemInterface>(OtherActor);
-	if (OverlappingPawn)
-	{
-		OverlappingPawn->TakeItem(Item);
-	}
+	// IABCharacterItemInterface* OverlappingPawn = Cast<IABCharacterItemInterface>(OtherActor);
+	// if (OverlappingPawn)
+	// {
+	// 	OverlappingPawn->TakeItem(Item);
+	// }
+
+	TArray<TObjectPtr<UABItemData>> ItemDatas;
+	ItemDatas.Add(Item);
+
+	Character->InventoryComponent->AddItems(ItemDatas);
 }
 
 void AABItemBox::OnEffectFinished(UParticleSystemComponent* ParticleSystem)

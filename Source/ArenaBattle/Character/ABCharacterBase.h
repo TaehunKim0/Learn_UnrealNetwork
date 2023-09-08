@@ -41,6 +41,7 @@ public:
 
 	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
 protected:
 	virtual void SetCharacterControlData(const class UABCharacterControlData* CharacterControlData);
@@ -48,8 +49,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = CharacterControl, Meta = (AllowPrivateAccess = "true"))
 	TMap<ECharacterControlType, class UABCharacterControlData*> CharacterControlManager;
 
-// Combo Action Section
-protected:
+	// Combo Action Section
+	protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	TObjectPtr<class UAnimMontage> ComboActionMontage;
 
@@ -68,13 +69,13 @@ protected:
 	FTimerHandle ComboTimerHandle;
 	bool HasNextComboCommand = false;
 
-// Attack Hit Section
-protected:
+	// Attack Hit Section
+	protected:
 	virtual void AttackHitCheck() override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-// Dead Section
-protected:
+	// Dead Section
+	protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAnimMontage> DeadMontage;
 	
@@ -84,25 +85,27 @@ protected:
 
 	float DeadEventDelayTime = 5.0f;
 
-// Stat Section
-public:
+	// Stat Section
+	public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UABCharacterStatComponent> Stat;
 
-// UI Widget Section
-protected:
+	// UI Widget Section
+	protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UWidgetComponent> HpBar;
 
 	virtual void SetupCharacterWidget(class UABUserWidget* InUserWidget) override;
 
-// Item Section
-protected:
+	// Item Section
+	protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Equipment, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USkeletalMeshComponent> Weapon;
 
 	UPROPERTY()
 	TArray<FTakeItemDelegateWrapper> TakeItemActions;
+
+
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastRPCTakeItem(class UABItemData* InItemData);
@@ -112,14 +115,21 @@ protected:
 	virtual void EquipWeapon(class UABItemData* InItemData);
 	virtual void ReadScroll(class UABItemData* InItemData);
 
-// Stat Section
-public:
+	// Stat Section
+	public:
 	int32 GetLevel();
 	void SetLevel(int32 InNewLevel);
 	void ApplyStat(const FABCharacterStat& BaseStat, const FABCharacterStat& ModifierStat);
 
-// Event Section
-public:
+	// Event Section
+	public:
 	UFUNCTION(NetMulticast, Unreliable)
 	void MulticastRPCActivateItemEffect(AABItemBox* ItemBox);
+
+public:
+	void UseInventory(TArray<UABItemData*> InItemDatas);
+	
+	// Item Section
+    UPROPERTY(Replicated)
+    class UInventoryComponent* InventoryComponent;
 };
