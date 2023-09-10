@@ -5,7 +5,15 @@
 
 #include "Character/ABCharacterPlayer.h"
 #include "Character/ABSkillActionData.h"
+#include "Components/Image.h"
 #include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
+#include "Materials/MaterialInstanceDynamic.h"
+
+void UABCharacterSkillWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}
 
 void UABCharacterSkillWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
@@ -14,9 +22,12 @@ void UABCharacterSkillWidget::NativeTick(const FGeometry& MyGeometry, float InDe
 
 	if (Player->bCanSkillAttack)
 	{
-		PB_Skill->SetPercent(0);
+		TB_CoolTime->SetVisibility(ESlateVisibility::Hidden);
 		return;
 	}
 	
-	PB_Skill->SetPercent(1 - (Player->GetCurrentSkillTimerRate() /Player->GetSkillActionData()->SkillCoolTime));
+
+	TB_CoolTime->SetVisibility(ESlateVisibility::Visible);
+	const auto CoolTimeText = FString::Printf(TEXT("%i"), (static_cast<int>(Player->GetSkillActionDataCoolTime()) - static_cast<int>(Player->GetCurrentSkillTimerRate())));
+	TB_CoolTime->SetText(FText::FromString(CoolTimeText));
 }

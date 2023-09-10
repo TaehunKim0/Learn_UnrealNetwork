@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ABSkillActionData.h"
 #include "Character/ABCharacterBase.h"
 #include "InputActionValue.h"
 #include "Interface/ABCharacterHUDInterface.h"
@@ -103,8 +104,13 @@ protected:
 
 // Skill Action
 public:
-	class UABSkillActionData* GetSkillActionData() { return SkillActionData; }
+	UFUNCTION(BlueprintCallable)
+	float GetSkillActionDataCoolTime() { return SkillActionData->SkillCoolTime; }
+	
+	UFUNCTION(BlueprintCallable)
 	float GetCurrentSkillTimerRate() { return GetWorldTimerManager().GetTimerElapsed(SkillTimerHandle); }
+
+	UPROPERTY(BlueprintReadOnly)
 	bool bCanSkillAttack = true; // 스킬 시전 가능여부
 	
 protected:

@@ -15,9 +15,10 @@ class ARENABATTLE_API UABCharacterSkillWidget : public UABUserWidget
 	GENERATED_BODY()
 
 public:
+	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
 	UPROPERTY(meta=(BindWidget))
-	class UProgressBar* PB_Skill;
+	class UTextBlock* TB_CoolTime;
 };
